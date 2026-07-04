@@ -1,15 +1,20 @@
+import Cover from './components/Cover'
+import Ceremony from './components/Ceremony'
+import Reception from './components/Reception'
+import LocationMap from './components/LocationMap'
+import Footer from './components/Footer'
+
 function App() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-rose-50 text-stone-800 px-6 text-center">
-      <p className="uppercase tracking-[0.3em] text-sm text-rose-400 mb-4">
-        We're getting married
-      </p>
-      <h1 className="text-4xl sm:text-6xl font-serif mb-4">
-        Groom &amp; Bride
-      </h1>
-      <p className="text-lg text-stone-500 mb-2">Save the date</p>
-      <p className="text-xl font-medium">-- / -- / ----</p>
-    </main>
+    <div className="min-h-screen bg-cream-dark sm:py-8">
+      <div className="mx-auto min-h-[100svh] max-w-md bg-cream text-ink shadow-none sm:min-h-0 sm:rounded-lg sm:shadow-xl">
+        <Cover />
+        <Ceremony />
+        <Reception />
+        <LocationMap />
+        <Footer />
+      </div>
+    </div>
   )
 }
 

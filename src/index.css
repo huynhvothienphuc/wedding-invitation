@@ -1,6 +1,20 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-cream: #faf5ec;
+  --color-cream-dark: #f1e9d8;
+  --color-gold: #b08d57;
+  --color-gold-light: #c9a66b;
+  --color-ink: #3e3529;
+  --color-ink-soft: #6b5d4f;
+
+  --font-script: 'Dancing Script', cursive;
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-body: 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  background: var(--color-cream-dark);
+  font-family: var(--font-body);
 }
