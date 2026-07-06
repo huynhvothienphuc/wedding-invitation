@@ -88,24 +88,46 @@ function makePlaceholderQr(seedText) {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 }
 
-const GALLERY_PHOTOS = [1, 2, 3, 4].map((n) => ({
-  id: n,
-  src: makePlaceholderPhoto(`Ảnh cưới ${n}`),
-  alt: `Ảnh cưới ${n}`,
+// 4 ảnh đầu tiên trong public/gallery — nếu đổi/thêm ảnh, cập nhật tên file
+// tại đây. Ảnh nào chưa có sẽ tự rơi về placeholder (xem onError bên dưới).
+const GALLERY_FILENAMES = ['NBH_5935.JPG', 'NBH_5986.JPG', 'NBH_6027.JPG', 'NBH_6080.JPG']
+
+const GALLERY_PHOTOS = GALLERY_FILENAMES.map((filename, index) => ({
+  id: index + 1,
+  src: `/gallery/${filename}`,
+  fallback: makePlaceholderPhoto(`Ảnh cưới ${index + 1}`),
+  alt: `Ảnh cưới ${index + 1}`,
 }))
 
+// Dùng cho onError của <img> ảnh gallery: nếu ảnh thật chưa có trong
+// public/gallery, tự động rơi về ảnh placeholder thay vì hiện icon vỡ ảnh.
+function fallbackToPlaceholder(fallbackSrc) {
+  return (event) => {
+    event.currentTarget.onerror = null
+    event.currentTarget.src = fallbackSrc
+  }
+}
+
+// Ảnh QR thật đọc từ public/gift/groom-qr.png và bride-qr.png — nếu chưa có,
+// tự động rơi về QR placeholder (xem onError trong GiftModal).
 const GIFT_QR_CODES = [
   {
     id: 'groom',
-    label: COUPLE.groomFull,
-    bank: 'Ngân hàng • Số tài khoản (placeholder)',
-    src: makePlaceholderQr('groom-qr'),
+    role: 'Út Nam',
+    name: COUPLE.groomFull,
+    bank: 'TP Bank',
+    account: '9168 6816 868',
+    src: '/gift/groom-qr.png',
+    fallback: makePlaceholderQr('groom-qr'),
   },
   {
     id: 'bride',
-    label: COUPLE.brideFull,
-    bank: 'Ngân hàng • Số tài khoản (placeholder)',
-    src: makePlaceholderQr('bride-qr'),
+    role: 'Út Nữ',
+    name: COUPLE.brideFull,
+    bank: 'Techcombank',
+    account: '1903 7868 5180 16',
+    src: '/gift/bride-qr.png',
+    fallback: makePlaceholderQr('bride-qr'),
   },
 ]
 
@@ -350,6 +372,7 @@ function Lightbox({ photo, onClose, onPrev, onNext }) {
         src={photo.src}
         alt={photo.alt}
         onClick={(event) => event.stopPropagation()}
+        onError={fallbackToPlaceholder(photo.fallback)}
         className="max-h-[80vh] max-w-full rounded-lg object-contain shadow-2xl"
       />
 
@@ -403,6 +426,7 @@ function GallerySection() {
               <img
                 src={photo.src}
                 alt={photo.alt}
+                onError={fallbackToPlaceholder(photo.fallback)}
                 className="aspect-[4/5] w-full object-cover transition duration-300 group-hover:scale-105"
               />
             </button>
@@ -636,7 +660,173 @@ function GuestbookSection() {
 
 /* ------------------------------------------------------------------ */
 /* SECTION 8 — PHONG BAO MỪNG CƯỚI                                       */
+/* Phong bao đỏ-vàng kim truyền thống, tách biệt màu với phần còn lại     */
+/* của thiệp — theo đúng phong tục lì xì/mừng cưới.                      */
 /* ------------------------------------------------------------------ */
+
+const ENVELOPE_RED = '#b91c1c'
+const ENVELOPE_RED_DARK_1 = '#5c1612'
+const ENVELOPE_RED_DARK_2 = '#6b1d18'
+const ENVELOPE_RED_TEXTURE = '#7f1d1d'
+const ENVELOPE_GOLD = '#fbbf24'
+const ENVELOPE_GOLD_LIGHT = '#fde047'
+const ENVELOPE_GOLD_DARK = '#d97706'
+const ENVELOPE_GOLD_PALE = '#fef3c7'
+
+function EnvelopeCoin({ size, style }) {
+  return (
+    <div
+      className="absolute rounded-full"
+      style={{
+        width: size,
+        height: size,
+        background: ENVELOPE_GOLD,
+        border: `2px solid ${ENVELOPE_GOLD_DARK}`,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        ...style,
+      }}
+    >
+      <div
+        className="absolute rounded-full"
+        style={{ inset: 2, border: `2px solid ${ENVELOPE_GOLD_LIGHT}` }}
+      />
+      <div
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        style={{
+          width: size * 0.28,
+          height: size * 0.28,
+          border: `2px solid ${ENVELOPE_GOLD_DARK}`,
+          boxShadow: 'inset 1px 1px 2px rgba(0,0,0,0.2)',
+        }}
+      />
+    </div>
+  )
+}
+
+function EnvelopeCornerBracket({ className = '', rotate = 0 }) {
+  return (
+    <svg
+      className={className}
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={ENVELOPE_GOLD}
+      strokeWidth="2"
+      style={{ transform: `rotate(${rotate}deg)` }}
+    >
+      <path
+        d="M2 2 L2 16 L6 16 L6 6 L16 6 L16 2 Z"
+        opacity="0.85"
+        strokeLinecap="square"
+        strokeLinejoin="miter"
+      />
+      <path d="M6 10 L10 10 L10 6" opacity="0.85" strokeLinecap="square" />
+    </svg>
+  )
+}
+
+function GiftEnvelopeButton({ onOpen }) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label="Mở phong bao mừng cưới"
+      className="group relative mx-auto flex flex-col items-center outline-none"
+      style={{ width: 200, height: 256 }}
+    >
+      <div className="relative flex h-full w-full items-center justify-center">
+        <div className="absolute inset-0 rounded-full bg-amber-300/25 blur-2xl" />
+
+        <EnvelopeCoin size={31} style={{ top: '5%', right: '5%' }} />
+        <EnvelopeCoin size={25} style={{ top: '20%', left: '0%' }} />
+        <EnvelopeCoin size={28} style={{ bottom: '20%', right: '0%' }} />
+        <EnvelopeCoin size={22} style={{ bottom: '8%', left: '8%' }} />
+        <EnvelopeCoin size={21} style={{ top: '45%', right: '-5%' }} />
+
+        <span className="absolute text-white" style={{ top: '8%', left: '20%', fontSize: 14 }}>
+          ✦
+        </span>
+        <span
+          className="absolute text-white"
+          style={{ bottom: '35%', right: '8%', fontSize: 11 }}
+        >
+          ✦
+        </span>
+        <span className="absolute text-white" style={{ top: '40%', left: '3%', fontSize: 8 }}>
+          ✦
+        </span>
+
+        <div className="relative" style={{ width: 140, height: 196 }}>
+          <div
+            className="absolute rounded-b-lg"
+            style={{
+              left: 2,
+              right: -2,
+              bottom: -3,
+              height: 196,
+              backgroundColor: ENVELOPE_RED_DARK_1,
+            }}
+          />
+          <div
+            className="absolute rounded-r-lg"
+            style={{ top: 2, bottom: -2, right: -3, width: 140, backgroundColor: ENVELOPE_RED_DARK_2 }}
+          />
+
+          <div
+            className="absolute inset-0 overflow-hidden rounded-lg"
+            style={{ backgroundColor: ENVELOPE_RED, boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}
+          >
+            <div
+              className="absolute inset-0 opacity-20"
+              style={{
+                backgroundImage: `repeating-radial-gradient(circle at 0 0, transparent 0, transparent 11.2px, ${ENVELOPE_RED_TEXTURE} 11.2px, ${ENVELOPE_RED_TEXTURE} 11.9px)`,
+                backgroundSize: '21px 21px',
+                backgroundPosition: '10.5px 10.5px',
+              }}
+            />
+            <div
+              className="absolute inset-x-0 top-0"
+              style={{ height: 4, backgroundColor: ENVELOPE_GOLD }}
+            />
+
+            <div
+              className="absolute left-1/2 top-1/2 flex items-center justify-center rounded-full shadow-lg"
+              style={{
+                width: 63,
+                height: 63,
+                transform: 'translate(-50%, -50%)',
+                background: `radial-gradient(circle, ${ENVELOPE_GOLD} 0%, ${ENVELOPE_GOLD_DARK} 100%)`,
+                border: `3px solid ${ENVELOPE_GOLD_PALE}`,
+              }}
+            >
+              <span
+                className="font-bold"
+                style={{
+                  fontSize: 31,
+                  color: ENVELOPE_RED,
+                  lineHeight: 1,
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
+                }}
+              >
+                囍
+              </span>
+            </div>
+
+            <EnvelopeCornerBracket className="absolute left-2 top-2" rotate={0} />
+            <EnvelopeCornerBracket className="absolute right-2 top-2" rotate={90} />
+            <EnvelopeCornerBracket className="absolute bottom-2 left-2" rotate={-90} />
+            <EnvelopeCornerBracket className="absolute bottom-2 right-2" rotate={180} />
+          </div>
+        </div>
+      </div>
+
+      <p className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-medium text-ink-soft transition group-hover:text-ink">
+        Nhấn để mở
+      </p>
+    </button>
+  )
+}
 
 function GiftModal({ onClose }) {
   useEffect(() => {
@@ -654,30 +844,51 @@ function GiftModal({ onClose }) {
     >
       <div
         onClick={(event) => event.stopPropagation()}
-        className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-lg bg-cream p-6 text-center shadow-2xl md:p-8"
+        className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-lg bg-cream sm:max-w-xl"
       >
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold">Mừng Cưới</p>
+        <div className="relative px-6 pb-4 pt-6 text-center" style={{ backgroundColor: ENVELOPE_RED }}>
           <button
             type="button"
             onClick={onClose}
             aria-label="Đóng"
-            className="text-xl text-ink-soft transition hover:text-ink"
+            className="absolute right-3 top-3 text-xl text-white/80 transition hover:text-white"
           >
             ✕
           </button>
+          <h2
+            className="font-serif text-2xl font-bold uppercase tracking-wide text-white"
+            style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}
+          >
+            Phong Bao Mừng Cưới
+          </h2>
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2">
+        <div className="flex flex-col items-center gap-6 p-6 text-center sm:flex-row sm:flex-wrap sm:items-start sm:justify-center">
           {GIFT_QR_CODES.map((qr) => (
-            <div key={qr.id}>
-              <img
-                src={qr.src}
-                alt={`Mã QR mừng cưới ${qr.label}`}
-                className="mx-auto w-40 rounded-md border border-gold-light/40"
-              />
-              <p className="mt-3 font-serif text-lg text-ink">{qr.label}</p>
-              <p className="mt-1 text-xs text-ink-soft">{qr.bank}</p>
+            <div key={qr.id} className="flex max-w-[180px] flex-1 flex-col items-center">
+              <p className="mb-2 min-h-[2rem] text-xs font-medium text-ink">
+                {qr.role} - {qr.name}
+              </p>
+              <div className="flex h-32 w-32 items-center justify-center rounded-xl border-2 border-gold-light/40 bg-white p-2 shadow-lg sm:h-40 sm:w-40">
+                <img
+                  src={qr.src}
+                  alt={`QR - ${qr.role} - ${qr.name}`}
+                  onError={fallbackToPlaceholder(qr.fallback)}
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <div className="mt-2 space-y-0.5 text-center">
+                <p className="text-[10px] text-ink-soft">{qr.bank}</p>
+                <p className="font-mono text-[10px] text-ink-soft">{qr.account}</p>
+                <p className="text-[10px] font-semibold text-ink">{qr.name}</p>
+              </div>
+              <a
+                href={qr.src}
+                download={`qr-${qr.id}.png`}
+                className="mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-medium text-gold-dark transition hover:bg-gold/10"
+              >
+                Lưu QR
+              </a>
             </div>
           ))}
         </div>
@@ -690,24 +901,18 @@ function GiftSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
-    <section className="relative overflow-hidden bg-cream px-6 py-16 text-center sm:px-10 md:px-16">
-      <FloralMotif className="absolute -top-6 left-1/2 h-24 w-24 -translate-x-1/2 rotate-45 text-gold/60 md:h-28 md:w-28" />
+    <section className="bg-cream px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
+      <h2 className="font-serif text-2xl font-bold uppercase tracking-wide text-gold-dark md:text-3xl">
+        Phong Bao Mừng Cưới
+      </h2>
 
-      <p className="mt-16 text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
-        Mừng Cưới
-      </p>
-      <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-ink-soft md:max-w-md md:text-base">
-        Sự hiện diện của bạn là món quà quý giá nhất. Nếu muốn gửi lời chúc phúc bằng một phần quà
-        nhỏ, chúng tôi xin trân trọng đón nhận qua:
-      </p>
+      <div className="mt-10">
+        <GiftEnvelopeButton onOpen={() => setIsModalOpen(true)} />
+      </div>
 
-      <button
-        type="button"
-        onClick={() => setIsModalOpen(true)}
-        className="mt-8 inline-block rounded-full border border-gold px-8 py-3 text-xs font-medium uppercase tracking-[0.3em] text-gold transition hover:bg-gold hover:text-cream md:text-sm"
-      >
-        Gửi Quà Mừng
-      </button>
+      <p className="mx-auto mt-10 max-w-sm text-sm leading-relaxed text-ink-soft md:max-w-md md:text-base">
+        Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi!
+      </p>
 
       {isModalOpen && <GiftModal onClose={() => setIsModalOpen(false)} />}
     </section>
@@ -823,8 +1028,7 @@ function App() {
 
   return (
     <div className="text-ink">
-      {/* Đặt file nhạc nền của bạn tại public/audio/wedding-song.mp3 */}
-      <audio ref={audioRef} src="/audio/wedding-song.mp3" loop preload="none" />
+      <audio ref={audioRef} src="/audio/my-love.mp3" loop preload="none" />
 
       <HeroSection />
       <CeremonySection />
