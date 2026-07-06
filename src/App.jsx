@@ -43,9 +43,6 @@ const RECEPTION = {
   address: '16A Lê Hồng Phong, P. Hòa Hưng, TP.HCM',
 }
 
-// Toạ độ mô phỏng (giả lập) cho Queen Plaza Kỳ Hòa — thay bằng toạ độ thật khi có.
-const MAP_COORDINATES = { lat: 10.7756, lng: 106.6819 }
-
 const TIMELINE = [
   { time: '11:00', label: 'Đón khách' },
   { time: '11:45', label: 'Khai tiệc' },
@@ -108,8 +105,8 @@ function fallbackToPlaceholder(fallbackSrc) {
   }
 }
 
-// Ảnh QR thật đọc từ public/gift/groom-qr.png và bride-qr.png — nếu chưa có,
-// tự động rơi về QR placeholder (xem onError trong GiftModal).
+// Ảnh QR thật đọc từ public/CR.jpeg (chú rể) và public/CD.png (cô dâu) —
+// nếu chưa có, tự động rơi về QR placeholder (xem onError trong GiftModal).
 const GIFT_QR_CODES = [
   {
     id: 'groom',
@@ -117,7 +114,7 @@ const GIFT_QR_CODES = [
     name: COUPLE.groomFull,
     bank: 'TP Bank',
     account: '9168 6816 868',
-    src: '/gift/groom-qr.png',
+    src: '/CR.jpeg',
     fallback: makePlaceholderQr('groom-qr'),
   },
   {
@@ -126,7 +123,7 @@ const GIFT_QR_CODES = [
     name: COUPLE.brideFull,
     bank: 'Techcombank',
     account: '1903 7868 5180 16',
-    src: '/gift/bride-qr.png',
+    src: '/CD.png',
     fallback: makePlaceholderQr('bride-qr'),
   },
 ]
@@ -231,12 +228,14 @@ function HeroSection({ showButton = false, onOpen }) {
         Save Our Date
       </p>
 
-      <h1 className="mt-6 font-script text-5xl leading-tight text-ink sm:text-7xl md:text-8xl">
-        {COUPLE.groomShort}
-        <span className="mx-2 align-middle text-3xl text-gold sm:text-5xl md:text-6xl">
-          ♡
-        </span>
-        {COUPLE.brideShort}
+      <h1 className="mt-6 font-script text-3xl leading-tight text-ink sm:text-7xl md:text-8xl">
+        <span className="whitespace-nowrap">
+          {COUPLE.groomShort}
+          <span className="mx-1.5 align-middle text-xl text-gold sm:mx-2 sm:text-5xl md:text-6xl">
+            ♡
+          </span>
+        </span>{' '}
+        <span className="whitespace-nowrap">{COUPLE.brideShort}</span>
       </h1>
 
       <p className="mt-8 font-serif text-2xl tracking-widest text-ink-soft md:text-3xl">
@@ -251,6 +250,7 @@ function HeroSection({ showButton = false, onOpen }) {
         <button
           type="button"
           onClick={onOpen}
+          onTouchStart={(event) => event.stopPropagation()}
           className="mt-12 rounded-full border border-gold px-8 py-3 text-xs font-medium uppercase tracking-[0.3em] text-gold transition hover:bg-gold hover:text-cream md:text-sm"
         >
           Mở Thiệp
@@ -264,6 +264,30 @@ function HeroSection({ showButton = false, onOpen }) {
 /* SECTION 2 — LỄ CƯỚI (GIA TIÊN)                                       */
 /* ------------------------------------------------------------------ */
 
+// Hoa sen trắng — thay cho ký hiệu đánh dấu người đã khuất.
+function LotusIcon({ className = '' }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      role="img"
+      aria-label="đã mất"
+      fill="white"
+      stroke="#c9a97c"
+      strokeWidth="0.75"
+    >
+      {[-60, -30, 0, 30, 60].map((angle) => (
+        <path
+          key={angle}
+          d="M12 13 C10.3 10, 10.3 5.5, 12 2 C13.7 5.5, 13.7 10, 12 13 Z"
+          transform={`rotate(${angle} 12 13)`}
+        />
+      ))}
+      <circle cx="12" cy="13" r="1.4" fill="#c9a97c" stroke="none" />
+    </svg>
+  )
+}
+
 function FamilyBlock({ family }) {
   return (
     <div className="text-center">
@@ -271,11 +295,7 @@ function FamilyBlock({ family }) {
       {family.parents.map((parent) => (
         <p key={parent.name} className="font-serif text-lg font-medium text-ink md:text-xl">
           {parent.name}
-          {parent.deceased && (
-            <span className="ml-1 text-ink-soft" aria-label="đã mất">
-              ✝
-            </span>
-          )}
+          {parent.deceased && <LotusIcon className="ml-1 inline-block h-4 w-4 align-middle" />}
         </p>
       ))}
       <p className="mx-auto mt-2 max-w-[16rem] text-sm text-ink-soft md:text-base">
@@ -487,8 +507,9 @@ function PartyInviteSection() {
 /* ------------------------------------------------------------------ */
 
 function LocationSection() {
-  const mapEmbedSrc = `https://www.google.com/maps?q=${MAP_COORDINATES.lat},${MAP_COORDINATES.lng}&hl=vi&z=16&output=embed`
-  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${MAP_COORDINATES.lat},${MAP_COORDINATES.lng}`
+  const mapQuery = encodeURIComponent(`${RECEPTION.venue}, ${RECEPTION.address}`)
+  const mapEmbedSrc = `https://www.google.com/maps?q=${mapQuery}&hl=vi&z=16&output=embed`
+  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`
 
   return (
     <section className="bg-cream-dark px-6 py-16 sm:px-10 md:px-16 md:py-24">
