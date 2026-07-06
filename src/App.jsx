@@ -676,7 +676,7 @@ const ENVELOPE_GOLD_PALE = '#fef3c7'
 function EnvelopeCoin({ size, style }) {
   return (
     <div
-      className="absolute rounded-full"
+      className="animate-coin-float absolute rounded-full"
       style={{
         width: size,
         height: size,
@@ -727,37 +727,63 @@ function EnvelopeCornerBracket({ className = '', rotate = 0 }) {
 }
 
 function GiftEnvelopeButton({ onOpen }) {
+  const [isOpening, setIsOpening] = useState(false)
+
+  const handleClick = () => {
+    if (isOpening) return
+    setIsOpening(true)
+    // Để hiệu ứng rung + bung mở (envelope-shake-open, ~0.6s) chạy xong
+    // rồi mới thực sự hiện modal.
+    window.setTimeout(() => {
+      onOpen()
+      setIsOpening(false)
+    }, 600)
+  }
+
   return (
     <button
       type="button"
-      onClick={onOpen}
+      onClick={handleClick}
+      disabled={isOpening}
       aria-label="Mở phong bao mừng cưới"
-      className="group relative mx-auto flex flex-col items-center outline-none"
+      className="group relative mx-auto flex flex-col items-center outline-none disabled:cursor-default"
       style={{ width: 200, height: 256 }}
     >
-      <div className="relative flex h-full w-full items-center justify-center">
-        <div className="absolute inset-0 rounded-full bg-amber-300/25 blur-2xl" />
+      <div
+        className={`relative flex h-full w-full items-center justify-center ${
+          isOpening ? '' : 'animate-envelope-float'
+        }`}
+      >
+        <div className="animate-glow-pulse absolute inset-0 rounded-full bg-amber-300/25 blur-2xl" />
 
-        <EnvelopeCoin size={31} style={{ top: '5%', right: '5%' }} />
-        <EnvelopeCoin size={25} style={{ top: '20%', left: '0%' }} />
-        <EnvelopeCoin size={28} style={{ bottom: '20%', right: '0%' }} />
-        <EnvelopeCoin size={22} style={{ bottom: '8%', left: '8%' }} />
-        <EnvelopeCoin size={21} style={{ top: '45%', right: '-5%' }} />
+        <EnvelopeCoin size={31} style={{ top: '5%', right: '5%', animationDelay: '0s' }} />
+        <EnvelopeCoin size={25} style={{ top: '20%', left: '0%', animationDelay: '0.4s' }} />
+        <EnvelopeCoin size={28} style={{ bottom: '20%', right: '0%', animationDelay: '0.8s' }} />
+        <EnvelopeCoin size={22} style={{ bottom: '8%', left: '8%', animationDelay: '1.2s' }} />
+        <EnvelopeCoin size={21} style={{ top: '45%', right: '-5%', animationDelay: '1.6s' }} />
 
-        <span className="absolute text-white" style={{ top: '8%', left: '20%', fontSize: 14 }}>
-          ✦
-        </span>
         <span
-          className="absolute text-white"
-          style={{ bottom: '35%', right: '8%', fontSize: 11 }}
+          className="animate-sparkle absolute text-white"
+          style={{ top: '8%', left: '20%', fontSize: 14, animationDelay: '0s' }}
         >
           ✦
         </span>
-        <span className="absolute text-white" style={{ top: '40%', left: '3%', fontSize: 8 }}>
+        <span
+          className="animate-sparkle absolute text-white"
+          style={{ bottom: '35%', right: '8%', fontSize: 11, animationDelay: '0.6s' }}
+        >
+          ✦
+        </span>
+        <span
+          className="animate-sparkle absolute text-white"
+          style={{ top: '40%', left: '3%', fontSize: 8, animationDelay: '1.2s' }}
+        >
           ✦
         </span>
 
-        <div className="relative" style={{ width: 140, height: 196 }}>
+        <div
+          className={`relative ${isOpening ? 'animate-envelope-open' : 'group-hover:animate-envelope-wobble'}`}
+          style={{ width: 140, height: 196 }}>
           <div
             className="absolute rounded-b-lg"
             style={{
@@ -822,7 +848,7 @@ function GiftEnvelopeButton({ onOpen }) {
       </div>
 
       <p className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-medium text-ink-soft transition group-hover:text-ink">
-        Nhấn để mở
+        {isOpening ? 'Đang mở...' : 'Nhấn để mở'}
       </p>
     </button>
   )
