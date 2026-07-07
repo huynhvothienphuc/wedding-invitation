@@ -163,29 +163,29 @@ function FloralImage({ motif, className = '', fadeDirection }) {
 
   const style = fadeGradient
     ? {
-        WebkitMaskImage: `${maskUrl}, linear-gradient(${fadeGradient}, black, rgba(0,0,0,0.5))`,
-        maskImage: `${maskUrl}, linear-gradient(${fadeGradient}, black, rgba(0,0,0,0.5))`,
-        WebkitMaskSize: 'contain, 100% 100%',
-        maskSize: 'contain, 100% 100%',
-        WebkitMaskRepeat: 'no-repeat, no-repeat',
-        maskRepeat: 'no-repeat, no-repeat',
-        WebkitMaskPosition: 'center, center',
-        maskPosition: 'center, center',
-        WebkitMaskComposite: 'source-in',
-        maskComposite: 'intersect',
-      }
+      WebkitMaskImage: `${maskUrl}, linear-gradient(${fadeGradient}, black, rgba(0,0,0,0.5))`,
+      maskImage: `${maskUrl}, linear-gradient(${fadeGradient}, black, rgba(0,0,0,0.5))`,
+      WebkitMaskSize: 'contain, 100% 100%',
+      maskSize: 'contain, 100% 100%',
+      WebkitMaskRepeat: 'no-repeat, no-repeat',
+      maskRepeat: 'no-repeat, no-repeat',
+      WebkitMaskPosition: 'center, center',
+      maskPosition: 'center, center',
+      WebkitMaskComposite: 'source-in',
+      maskComposite: 'intersect',
+    }
     : {
-        WebkitMaskImage: maskUrl,
-        maskImage: maskUrl,
-        WebkitMaskSize: 'contain',
-        maskSize: 'contain',
-        WebkitMaskRepeat: 'no-repeat',
-        maskRepeat: 'no-repeat',
-        WebkitMaskPosition: 'center',
-        maskPosition: 'center',
-      }
+      WebkitMaskImage: maskUrl,
+      maskImage: maskUrl,
+      WebkitMaskSize: 'contain',
+      maskSize: 'contain',
+      WebkitMaskRepeat: 'no-repeat',
+      maskRepeat: 'no-repeat',
+      WebkitMaskPosition: 'center',
+      maskPosition: 'center',
+    }
 
-  return <div aria-hidden="true" className={className} style={style} />
+  return <div aria-hidden="true" className={className} style={style} ></div>
 }
 
 function SectionDivider() {
@@ -228,42 +228,46 @@ function MusicToggleButton({ isPlaying, onToggle }) {
 function HeroSection({ showButton = false, onOpen, isClosing = false }) {
   return (
     <section className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 py-16 text-center sm:px-10 md:px-16">
-      <FloralImage
-        motif="branch-1"
-        className="absolute -left-4 -top-4 h-32 w-32 -scale-x-100 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
-      />
+
       <FloralImage
         motif="branch-4"
-        className="absolute -bottom-4 -right-4 h-32 w-32 rotate-180 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
+        className="absolute -bottom-0 -right-4 h-32 w-32 rotate-240 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
+      />
+      <FloralImage
+        motif="branch-1"
+        className="absolute -right-4 -top-0 h-32 w-32 -scale-x-100 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
       />
       <FloralImage
         motif="branch-2"
-        className="absolute -right-6 -top-6 h-20 w-20 rotate-90 bg-rose/60 sm:h-28 sm:w-28 md:h-32 md:w-32"
+        className="absolute -left-6 -top-0 h-20 w-20  bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
       />
       <FloralImage
-        motif="branch-7"
-        className="absolute -bottom-6 -left-6 h-20 w-20 -rotate-90 bg-rose/60 sm:h-28 sm:w-28 md:h-32 md:w-32"
+        motif="branch-1"
+        className="absolute -left-6  h-20 w-20  bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
       />
       <FloralImage
-        motif="branch-6"
-        className="absolute left-1/2 top-8 h-14 w-14 -translate-x-1/2 bg-rose/60 sm:h-20 sm:w-20"
-      />
-      <FloralImage
-        motif="butterfly"
-        className="absolute right-[12%] top-40 h-8 w-8 -scale-x-100 bg-rose/60 sm:h-10 sm:w-10"
+        motif="branch-2"
+        className="absolute -bottom-6 -left-6 h-20 w-20 bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute bottom-28 left-[10%] h-8 w-8 -scale-x-100 bg-rose/60 sm:h-11 sm:w-11"
+        className="absolute left-[22%] top-50 h-8 w-8 -scale-x-100 bg-rose sm:h-10 sm:w-10"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute bottom-28 left-[10%] h-8 w-8 -scale-x-100 bg-rose sm:h-11 sm:w-11"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute bottom-18 left-[20%] h-8 w-8  -scale-x-100 bg-rose sm:h-11 sm:w-11"
       />
       <FloralImage
         motif="butterfly"
         className="absolute bottom-16 right-[16%] h-8 w-8 bg-rose/60 sm:h-10 sm:w-10"
       />
+      {/* DONE */}
 
-      <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
-        Save Our Date
-      </p>
+
 
       <h1 className="mt-6 flex flex-col items-center gap-3 font-script leading-tight text-ink sm:gap-4 md:gap-5">
         <span className="text-4xl sm:text-6xl md:text-7xl">{COUPLE.groomShort}</span>
@@ -290,9 +294,8 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
           type="button"
           onClick={onOpen}
           onTouchStart={(event) => event.stopPropagation()}
-          className={`mt-12 rounded-full border border-gold px-8 py-3 text-xs font-medium uppercase tracking-[0.3em] text-gold transition-all duration-500 hover:bg-gold hover:text-cream md:text-sm ${
-            isClosing ? 'pointer-events-none opacity-0' : 'opacity-100'
-          }`}
+          className={`mt-12 rounded-full border border-gold px-8 py-3 text-xs font-medium uppercase tracking-[0.3em] text-gold transition-all duration-500 hover:bg-gold hover:text-cream md:text-sm ${isClosing ? 'pointer-events-none opacity-0' : 'opacity-100'
+            }`}
         >
           Mở Thiệp
         </button>
@@ -307,26 +310,7 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
 
 // Hoa sen — thay cho ký hiệu đánh dấu người đã khuất.
 function LotusIcon({ className = '' }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      role="img"
-      aria-label="đã mất"
-      fill="white"
-      stroke="black"
-      strokeWidth="1"
-    >
-      {[-60, -30, 0, 30, 60].map((angle) => (
-        <path
-          key={angle}
-          d="M12 13 C10.3 10, 10.3 5.5, 12 2 C13.7 5.5, 13.7 10, 12 13 Z"
-          transform={`rotate(${angle} 12 13)`}
-        />
-      ))}
-      <circle cx="12" cy="13" r="1.4" fill="black" stroke="none" />
-    </svg>
-  )
+  return <img src="/lotus.png" alt="đã mất" className={className} />
 }
 
 function FamilyBlock({ family }) {
@@ -356,31 +340,35 @@ function CeremonySection() {
       <FloralImage
         motif="branch-1"
         fadeDirection="left"
-        className="absolute -right-10 top-0 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
+        className="absolute -left-10 top-10 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
       />
       <FloralImage
         motif="branch-2"
-        className="absolute -right-6 -top-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+        className="absolute -left-6 -top-6 h-24 w-24 rotate-60 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
       <FloralImage
         motif="branch-5"
-        className="absolute -bottom-6 -left-6 h-24 w-24 rotate-180 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+        className="absolute -bottom-6 -left-6 h-24 w-24 rotate-120 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+      />
+       <FloralImage
+        motif="branch-1"
+        className="absolute -bottom-7 left-30 h-24 w-24  bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
       <FloralImage
         motif="branch-3"
-        className="absolute left-1/2 top-6 h-16 w-16 -translate-x-1/2 bg-rose/60 sm:h-20 sm:w-20"
+        className="absolute bottom-30 -right-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute left-[12%] top-16 h-7 w-7 bg-rose/60 sm:h-9 sm:w-9"
+        className="absolute left-[12%] top-16 h-7 w-7 bg-rose sm:h-9 sm:w-9"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute right-[15%] top-32 h-6 w-6 -scale-x-100 bg-rose/60 sm:h-8 sm:w-8"
+        className="absolute right-[15%] top-32 h-6 w-6 -scale-x-100 bg-rose sm:h-8 sm:w-8"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute bottom-16 left-[20%] h-5 w-5 bg-rose/60 sm:h-7 sm:w-7"
+        className="absolute bottom-16 left-[20%] h-5 w-5 bg-rose sm:h-7 sm:w-7"
       />
       <div className="mx-auto max-w-3xl">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
@@ -414,16 +402,16 @@ function CeremonySection() {
         <p className="mt-6 text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Vào lúc
         </p>
-        <p className="mt-2 text-4xl font-light text-ink md:text-5xl">{WEDDING_DATE.time}</p>
+        <p className="mt-2 text-ink uppercase text-xl ">{WEDDING_DATE.time}</p>
 
         <div className="mt-6 flex items-center justify-center gap-3 text-xs uppercase tracking-widest text-ink-soft md:text-sm">
           <span>{WEDDING_DATE.weekday}</span>
           <span className="h-3 w-px bg-gold-light/60" />
-          <span>{WEDDING_DATE.day}</span>
+          <span className='text-xl  md:text-5xl'>{WEDDING_DATE.day}</span>
           <span className="h-3 w-px bg-gold-light/60" />
           <span>Tháng {WEDDING_DATE.month}</span>
         </div>
-        <p className="mt-2 text-4xl font-light tracking-widest text-gold md:text-5xl">
+        <p className="mt-2 font-light tracking-widest text-gold ">
           {WEDDING_DATE.year}
         </p>
         <p className="mt-2 text-xs text-ink-soft md:text-sm">({WEDDING_DATE.lunar})</p>
@@ -615,13 +603,18 @@ function PartyInviteSection() {
   return (
     <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
       <FloralImage
-        motif="branch-6"
-        className="absolute -left-6 -top-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-36 md:w-36"
+        motif="branch-1"
+        className="absolute -left-6 -top-6 h-48 w-24 bg-rose sm:h-32 sm:w-32 md:h-36 md:w-36 "
       />
-      <FloralImage
+       <FloralImage
         motif="branch-3"
-        className="absolute -bottom-6 -right-6 h-24 w-24 rotate-180 bg-rose sm:h-32 sm:w-32 md:h-36 md:w-36"
+        className="absolute -bottom-6 -right-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-36 md:w-36"
+      /> 
+       <FloralImage
+        motif="branch-1"
+        className="absolute -right-4 -top-0 h-32 w-32 -scale-x-100 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
       />
+     
       <div className="mx-auto max-w-2xl">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Thông tin tiệc cưới
@@ -630,16 +623,16 @@ function PartyInviteSection() {
         <p className="mt-6 text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Tiệc cưới sẽ diễn ra vào lúc
         </p>
-        <p className="mt-2 text-4xl font-light text-ink md:text-5xl">{TIMELINE[1].time}</p>
+        <p className="mt-2 font-light text-ink text-xl">{TIMELINE[1].time}</p>
 
         <div className="mt-6 flex items-center justify-center gap-3 text-xs uppercase tracking-widest text-ink-soft md:text-sm">
           <span>{WEDDING_DATE.weekday}</span>
           <span className="h-3 w-px bg-gold-light/60" />
-          <span>{WEDDING_DATE.day}</span>
+          <span className='text-xl  md:text-5xl'>{WEDDING_DATE.day}</span>
           <span className="h-3 w-px bg-gold-light/60" />
           <span>Tháng {WEDDING_DATE.month}</span>
         </div>
-        <p className="mt-2 text-4xl font-light tracking-widest text-gold md:text-5xl">
+        <p className="mt-2 font-light tracking-widest text-gold">
           {WEDDING_DATE.year}
         </p>
         <p className="mt-2 text-xs text-ink-soft md:text-sm">({WEDDING_DATE.lunar})</p>
@@ -678,7 +671,7 @@ function LocationSection() {
     <section className="relative px-6 py-16 sm:px-10 md:px-16 md:py-24">
       <FloralImage
         motif="branch-7"
-        className="absolute -bottom-6 -right-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+        className="absolute top-6 -right-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40 rotate-280"
       />
       <div className="mx-auto max-w-2xl text-center">
         <div>
@@ -725,22 +718,22 @@ function LocationSection() {
 function TimelineSection() {
   return (
     <section className="relative px-6 py-16 sm:px-10 md:px-16 md:py-24">
-      <FloralImage
+       <FloralImage
         motif="branch-1"
-        className="absolute -left-8 top-1/2 h-40 w-32 -translate-y-1/2 bg-rose/60 sm:h-56 sm:w-40 md:h-64 md:w-48"
+        className="absolute -left-8 top-1/2 h-40 w-32 -translate-y-1/2 bg-rose sm:h-56 sm:w-40 md:h-64 md:w-48"
       />
       <FloralImage
         motif="branch-6"
-        className="absolute -right-8 top-1/2 h-40 w-32 -translate-y-1/2 rotate-180 bg-rose/60 sm:h-56 sm:w-40 md:h-64 md:w-48"
+        className="absolute -right-8 top-1/2 h-40 w-32 -translate-y-1/2 rotate-330 bg-rose sm:h-56 sm:w-40 md:h-64 md:w-48"
+      />
+        <FloralImage
+        motif="butterfly"
+        className="absolute right-[18%] top-8 h-8 w-8 bg-rose sm:h-10 sm:w-10"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute right-[18%] top-8 h-8 w-8 bg-rose/60 sm:h-10 sm:w-10"
-      />
-      <FloralImage
-        motif="butterfly"
-        className="absolute bottom-10 left-[15%] h-6 w-6 -scale-x-100 bg-rose/60 sm:h-8 sm:w-8"
-      />
+        className="absolute bottom-10 left-[15%] h-6 w-6 -scale-x-100 bg-rose sm:h-8 sm:w-8"
+      /> 
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Lịch Trình
@@ -761,9 +754,8 @@ function TimelineSection() {
               )}
             </span>
             <span
-              className={`pt-0.5 text-left text-sm text-ink md:text-base ${
-                index < TIMELINE.length - 1 ? 'pb-16 md:pb-20' : ''
-              }`}
+              className={`pt-0.5 text-left text-sm text-ink md:text-base ${index < TIMELINE.length - 1 ? 'pb-16 md:pb-20' : ''
+                }`}
             >
               {item.label}
             </span>
@@ -961,9 +953,8 @@ function GiftEnvelopeButton({ onOpen }) {
       style={{ width: 200, height: 256 }}
     >
       <div
-        className={`relative flex h-full w-full items-center justify-center ${
-          isOpening ? '' : 'animate-envelope-float'
-        }`}
+        className={`relative flex h-full w-full items-center justify-center ${isOpening ? '' : 'animate-envelope-float'
+          }`}
       >
         <div className="animate-glow-pulse absolute inset-0 rounded-full bg-amber-300/25 blur-2xl" />
 
