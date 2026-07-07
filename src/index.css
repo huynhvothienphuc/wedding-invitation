@@ -10,8 +10,9 @@
   --color-ink-soft: #8a6f56;
   --color-rose: #d98f82;
   --color-rose-dark: #c06e60;
+  --color-name: #dc5a45;
 
-  --font-script: 'Dancing Script', cursive;
+  --font-script: 'WindSong', cursive;
   --font-serif: 'Cormorant Garamond', serif;
   --font-body: 'Be Vietnam Pro', system-ui, sans-serif;
 
@@ -136,4 +137,66 @@ body {
   75% {
     transform: scale(1.1) rotate(14deg);
   }
+}
+
+@keyframes butterfly-flutter {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-4px) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-1px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-4px) rotate(6deg);
+  }
+}
+
+.animate-butterfly-flutter {
+  animation: butterfly-flutter 3.2s ease-in-out infinite;
+}
+
+@keyframes butterfly-flutter-flipped {
+  0%,
+  100% {
+    transform: scaleX(-1) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: scaleX(-1) translateY(-4px) rotate(6deg);
+  }
+  50% {
+    transform: scaleX(-1) translateY(-1px) rotate(0deg);
+  }
+  75% {
+    transform: scaleX(-1) translateY(-4px) rotate(-6deg);
+  }
+}
+
+.animate-butterfly-flutter-flipped {
+  animation: butterfly-flutter-flipped 2.7s ease-in-out infinite;
+}
+
+/* Dùng cho bướm cần giữ offset -translate-y-1/2 (căn giữa theo chiều dọc)
+   vì animation sẽ ghi đè hoàn toàn transform tĩnh. */
+@keyframes butterfly-flutter-centered {
+  0%,
+  100% {
+    transform: translateY(-50%) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-50%) translateY(-4px) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-50%) translateY(-1px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-50%) translateY(-4px) rotate(6deg);
+  }
+}
+
+.animate-butterfly-flutter-centered {
+  animation: butterfly-flutter-centered 3.2s ease-in-out infinite;
 }

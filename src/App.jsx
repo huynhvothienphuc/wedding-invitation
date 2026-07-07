@@ -251,32 +251,32 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
       />
       <FloralImage
         motif="butterfly"
-        className="absolute left-[22%] top-50 h-8 w-8 -scale-x-100 bg-rose sm:h-10 sm:w-10"
+        className="absolute animate-butterfly-flutter-flipped left-[23%] top-50 h-8 w-8 bg-rose sm:h-10 sm:w-10"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute bottom-28 left-[10%] h-8 w-8 -scale-x-100 bg-rose sm:h-11 sm:w-11"
+        className="absolute animate-butterfly-flutter-flipped bottom-28 left-[12%] h-8 w-8 bg-rose sm:h-11 sm:w-11"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute bottom-18 left-[20%] h-8 w-8  -scale-x-100 bg-rose sm:h-11 sm:w-11"
+        className="absolute animate-butterfly-flutter-flipped bottom-18 left-[20%] h-8 w-8 bg-rose sm:h-11 sm:w-11"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute bottom-16 right-[16%] h-8 w-8 bg-rose/60 sm:h-10 sm:w-10"
+        className="absolute animate-butterfly-flutter bottom-16 right-[16%] h-8 w-8 bg-rose/60 sm:h-10 sm:w-10"
       />
       {/* DONE */}
 
 
 
-      <h1 className="mt-6 flex flex-col items-center gap-3 font-script leading-tight text-ink sm:gap-4 md:gap-5">
+      <h1 className="mt-6 flex flex-col items-center gap-3 font-script leading-snug text-name sm:gap-4 md:gap-5">
         <span className="text-4xl sm:text-6xl md:text-7xl">{COUPLE.groomShort}</span>
         <span className="text-2xl text-gold sm:text-4xl md:text-5xl">♡</span>
         <span className="relative text-4xl sm:text-6xl md:text-7xl">
           {COUPLE.brideShort}
           <FloralImage
             motif="butterfly"
-            className="absolute -right-8 top-1/2 h-8 w-8 -translate-y-1/2 bg-rose/60 sm:-right-11 sm:h-10 sm:w-10 md:-right-12 md:h-11 md:w-11"
+            className="absolute animate-butterfly-flutter-centered  top-1/2 h-8 w-8 bg-rose/60 sm:-right-11 sm:h-10 sm:w-10 md:-right-15 md:h-11 md:w-11"
           />
         </span>
       </h1>
@@ -360,15 +360,15 @@ function CeremonySection() {
       />
       <FloralImage
         motif="butterfly"
-        className="absolute left-[12%] top-16 h-7 w-7 bg-rose sm:h-9 sm:w-9"
+        className="absolute animate-butterfly-flutter left-[12%] top-16 h-7 w-7 bg-rose sm:h-9 sm:w-9"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute right-[15%] top-32 h-6 w-6 -scale-x-100 bg-rose sm:h-8 sm:w-8"
+        className="absolute animate-butterfly-flutter-flipped right-[15%] top-32 h-6 w-6 bg-rose sm:h-8 sm:w-8"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute bottom-16 left-[20%] h-5 w-5 bg-rose sm:h-7 sm:w-7"
+        className="absolute animate-butterfly-flutter bottom-16 left-[20%] h-5 w-5 bg-rose sm:h-7 sm:w-7"
       />
       <div className="mx-auto max-w-3xl">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
@@ -387,12 +387,12 @@ function CeremonySection() {
           Lễ thành hôn của con chúng tôi
         </p>
 
-        <h2 className="mt-6 font-script text-4xl text-ink md:text-5xl">{COUPLE.groomFull}</h2>
+        <h2 className="mt-6 font-script text-4xl leading-snug text-name md:text-5xl">{COUPLE.groomFull}</h2>
         <p className="mt-1 text-xs uppercase tracking-widest text-ink-soft md:text-sm">Út Nam</p>
 
         <span className="mt-4 block font-serif text-2xl text-gold md:text-3xl">&</span>
 
-        <h2 className="mt-4 font-script text-4xl text-ink md:text-5xl">{COUPLE.brideFull}</h2>
+        <h2 className="mt-4 font-script text-4xl leading-snug text-name md:text-5xl">{COUPLE.brideFull}</h2>
         <p className="mt-1 text-xs uppercase tracking-widest text-ink-soft md:text-sm">Út Nữ</p>
 
         <p className="mx-auto mt-10 max-w-sm text-sm uppercase leading-relaxed tracking-widest text-ink-soft md:max-w-md md:text-base">
@@ -728,11 +728,11 @@ function TimelineSection() {
       />
         <FloralImage
         motif="butterfly"
-        className="absolute right-[18%] top-8 h-8 w-8 bg-rose sm:h-10 sm:w-10"
+        className="absolute animate-butterfly-flutter right-[18%] top-8 h-8 w-8 bg-rose sm:h-10 sm:w-10"
       />
       <FloralImage
         motif="butterfly"
-        className="absolute bottom-10 left-[15%] h-6 w-6 -scale-x-100 bg-rose sm:h-8 sm:w-8"
+        className="absolute animate-butterfly-flutter-flipped bottom-10 left-[15%] h-6 w-6 bg-rose sm:h-8 sm:w-8"
       /> 
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
@@ -1161,13 +1161,13 @@ function FooterSection() {
     <section className="relative px-6 py-16 text-center sm:px-10 md:px-16">
       <FloralImage
         motif="branch-6"
-        className="absolute -top-6 left-1/2 h-24 w-24 -translate-x-1/2 bg-rose/60 md:h-28 md:w-28"
+        className="absolute -top-6 left-1/2 h-24 w-24 -translate-x-1/2 bg-rose md:h-28 md:w-28"
       />
 
       <p className="mt-16 text-sm leading-relaxed text-ink-soft md:text-base">
         Rất hân hạnh được đón tiếp
       </p>
-      <p className="mt-4 font-script text-3xl text-ink md:text-4xl">
+      <p className="mt-4 font-script text-3xl leading-snug text-name md:text-4xl">
         {COUPLE.groomShort} &amp; {COUPLE.brideShort}
       </p>
       <p className="mt-2 text-xs uppercase tracking-[0.3em] text-gold md:text-sm">
