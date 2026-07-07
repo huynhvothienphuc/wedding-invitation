@@ -26,7 +26,7 @@ const GROOM_FAMILY = {
     { name: 'Huỳnh Hồ Thiên Lương', deceased: false },
     { name: 'Võ Thị Minh Hoài', deceased: false },
   ],
-  address: '322 Cách Mạng Tháng 8, P. Nhiêu Lộc, TP.HCM',
+  address: 'Cách Mạng Tháng 8, P. Nhiêu Lộc, TP.HCM',
 }
 
 const BRIDE_FAMILY = {
@@ -34,7 +34,7 @@ const BRIDE_FAMILY = {
     { name: 'Trần Quang Danh', deceased: true },
     { name: 'Nguyễn Thị Ba', deceased: false },
   ],
-  address: '7/2 Bà Lài, P. Bình Tiên, TP.HCM',
+  address: 'Bà Lài, P. Bình Tiên, TP.HCM',
 }
 
 const RECEPTION = {
@@ -147,38 +147,45 @@ async function submitGuestbookEntry({ name, message }) {
 /* SMALL REUSABLE UI PIECES                                            */
 /* ------------------------------------------------------------------ */
 
-function FloralMotif({ className = '' }) {
-  return (
-    <svg viewBox="0 0 200 200" className={className} fill="none" aria-hidden="true">
-      <path
-        d="M4 4 C 40 10, 60 30, 66 60 C 72 90, 90 110, 130 118 C 155 123, 175 132, 190 150"
-        stroke="currentColor"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-      />
-      {[
-        [40, 26, 1],
-        [84, 92, 0.85],
-        [142, 124, 0.7],
-      ].map(([cx, cy, scale]) => (
-        <g key={cx} transform={`translate(${cx} ${cy}) scale(${scale})`}>
-          {[0, 72, 144, 216, 288].map((angle) => (
-            <ellipse
-              key={angle}
-              cx="0"
-              cy="-7"
-              rx="4.2"
-              ry="7"
-              transform={`rotate(${angle})`}
-              stroke="currentColor"
-              strokeWidth="1"
-            />
-          ))}
-          <circle r="1.6" fill="currentColor" stroke="none" />
-        </g>
-      ))}
-    </svg>
-  )
+// Hoạ tiết hoa mộc lan thật (đã tách từ public/floral/floral.png, xem
+// scripts xử lý), dùng làm CSS mask nên có thể tô lại màu bằng bg-* như
+// SVG currentColor — dùng đúng 2 mức: bg-rose (hoa chính) và bg-rose/60 (phụ/bướm/nền mờ).
+// Truyền fadeDirection ('left' | 'right' | 'top' | 'bottom') để hoa mờ dần
+// hoà vào nền thay vì có viền vuông rõ nét.
+function FloralImage({ motif, className = '', fadeDirection }) {
+  const maskUrl = `url(/floral/motifs/${motif}.png)`
+  const fadeGradient = {
+    left: 'to left',
+    right: 'to right',
+    top: 'to top',
+    bottom: 'to bottom',
+  }[fadeDirection]
+
+  const style = fadeGradient
+    ? {
+        WebkitMaskImage: `${maskUrl}, linear-gradient(${fadeGradient}, black, rgba(0,0,0,0.5))`,
+        maskImage: `${maskUrl}, linear-gradient(${fadeGradient}, black, rgba(0,0,0,0.5))`,
+        WebkitMaskSize: 'contain, 100% 100%',
+        maskSize: 'contain, 100% 100%',
+        WebkitMaskRepeat: 'no-repeat, no-repeat',
+        maskRepeat: 'no-repeat, no-repeat',
+        WebkitMaskPosition: 'center, center',
+        maskPosition: 'center, center',
+        WebkitMaskComposite: 'source-in',
+        maskComposite: 'intersect',
+      }
+    : {
+        WebkitMaskImage: maskUrl,
+        maskImage: maskUrl,
+        WebkitMaskSize: 'contain',
+        maskSize: 'contain',
+        WebkitMaskRepeat: 'no-repeat',
+        maskRepeat: 'no-repeat',
+        WebkitMaskPosition: 'center',
+        maskPosition: 'center',
+      }
+
+  return <div aria-hidden="true" className={className} style={style} />
 }
 
 function SectionDivider() {
@@ -218,27 +225,59 @@ function MusicToggleButton({ isPlaying, onToggle }) {
 /* SECTION 1 — HERO / SAVE THE DATE                                     */
 /* ------------------------------------------------------------------ */
 
-function HeroSection({ showButton = false, onOpen }) {
+function HeroSection({ showButton = false, onOpen, isClosing = false }) {
   return (
-    <section className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-cream-dark px-6 py-16 text-center sm:px-10 md:px-16">
-      <FloralMotif className="absolute left-0 top-0 h-28 w-28 text-gold/70 sm:h-36 sm:w-36 md:h-44 md:w-44" />
-      <FloralMotif className="absolute bottom-0 right-0 h-28 w-28 rotate-180 text-gold/70 sm:h-36 sm:w-36 md:h-44 md:w-44" />
+    <section className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 py-16 text-center sm:px-10 md:px-16">
+      <FloralImage
+        motif="branch-1"
+        className="absolute -left-4 -top-4 h-32 w-32 -scale-x-100 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
+      />
+      <FloralImage
+        motif="branch-4"
+        className="absolute -bottom-4 -right-4 h-32 w-32 rotate-180 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
+      />
+      <FloralImage
+        motif="branch-2"
+        className="absolute -right-6 -top-6 h-20 w-20 rotate-90 bg-rose/60 sm:h-28 sm:w-28 md:h-32 md:w-32"
+      />
+      <FloralImage
+        motif="branch-7"
+        className="absolute -bottom-6 -left-6 h-20 w-20 -rotate-90 bg-rose/60 sm:h-28 sm:w-28 md:h-32 md:w-32"
+      />
+      <FloralImage
+        motif="branch-6"
+        className="absolute left-1/2 top-8 h-14 w-14 -translate-x-1/2 bg-rose/60 sm:h-20 sm:w-20"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute right-[12%] top-40 h-8 w-8 -scale-x-100 bg-rose/60 sm:h-10 sm:w-10"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute bottom-28 left-[10%] h-8 w-8 -scale-x-100 bg-rose/60 sm:h-11 sm:w-11"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute bottom-16 right-[16%] h-8 w-8 bg-rose/60 sm:h-10 sm:w-10"
+      />
 
-      <p className="text-xs font-medium uppercase tracking-[0.35em] text-gold md:text-sm">
+      <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
         Save Our Date
       </p>
 
-      <h1 className="mt-6 font-script text-3xl leading-tight text-ink sm:text-7xl md:text-8xl">
-        <span className="whitespace-nowrap">
-          {COUPLE.groomShort}
-          <span className="mx-1.5 align-middle text-xl text-gold sm:mx-2 sm:text-5xl md:text-6xl">
-            ♡
-          </span>
-        </span>{' '}
-        <span className="whitespace-nowrap">{COUPLE.brideShort}</span>
+      <h1 className="mt-6 flex flex-col items-center gap-3 font-script leading-tight text-ink sm:gap-4 md:gap-5">
+        <span className="text-4xl sm:text-6xl md:text-7xl">{COUPLE.groomShort}</span>
+        <span className="text-2xl text-gold sm:text-4xl md:text-5xl">♡</span>
+        <span className="relative text-4xl sm:text-6xl md:text-7xl">
+          {COUPLE.brideShort}
+          <FloralImage
+            motif="butterfly"
+            className="absolute -right-8 top-1/2 h-8 w-8 -translate-y-1/2 bg-rose/60 sm:-right-11 sm:h-10 sm:w-10 md:-right-12 md:h-11 md:w-11"
+          />
+        </span>
       </h1>
 
-      <p className="mt-8 font-serif text-2xl tracking-widest text-ink-soft md:text-3xl">
+      <p className="mt-8 text-2xl tracking-widest text-ink-soft md:text-3xl">
         {WEDDING_DATE.display}
       </p>
 
@@ -251,7 +290,9 @@ function HeroSection({ showButton = false, onOpen }) {
           type="button"
           onClick={onOpen}
           onTouchStart={(event) => event.stopPropagation()}
-          className="mt-12 rounded-full border border-gold px-8 py-3 text-xs font-medium uppercase tracking-[0.3em] text-gold transition hover:bg-gold hover:text-cream md:text-sm"
+          className={`mt-12 rounded-full border border-gold px-8 py-3 text-xs font-medium uppercase tracking-[0.3em] text-gold transition-all duration-500 hover:bg-gold hover:text-cream md:text-sm ${
+            isClosing ? 'pointer-events-none opacity-0' : 'opacity-100'
+          }`}
         >
           Mở Thiệp
         </button>
@@ -264,7 +305,7 @@ function HeroSection({ showButton = false, onOpen }) {
 /* SECTION 2 — LỄ CƯỚI (GIA TIÊN)                                       */
 /* ------------------------------------------------------------------ */
 
-// Hoa sen trắng — thay cho ký hiệu đánh dấu người đã khuất.
+// Hoa sen — thay cho ký hiệu đánh dấu người đã khuất.
 function LotusIcon({ className = '' }) {
   return (
     <svg
@@ -273,8 +314,8 @@ function LotusIcon({ className = '' }) {
       role="img"
       aria-label="đã mất"
       fill="white"
-      stroke="#c9a97c"
-      strokeWidth="0.75"
+      stroke="black"
+      strokeWidth="1"
     >
       {[-60, -30, 0, 30, 60].map((angle) => (
         <path
@@ -283,7 +324,7 @@ function LotusIcon({ className = '' }) {
           transform={`rotate(${angle} 12 13)`}
         />
       ))}
-      <circle cx="12" cy="13" r="1.4" fill="#c9a97c" stroke="none" />
+      <circle cx="12" cy="13" r="1.4" fill="black" stroke="none" />
     </svg>
   )
 }
@@ -291,11 +332,15 @@ function LotusIcon({ className = '' }) {
 function FamilyBlock({ family }) {
   return (
     <div className="text-center">
-      <p className="text-sm text-ink-soft md:text-base">Ông / Bà</p>
+      <p className="text-sm text-ink-soft md:text-base">Ba & Mẹ</p>
       {family.parents.map((parent) => (
         <p key={parent.name} className="font-serif text-lg font-medium text-ink md:text-xl">
           {parent.name}
-          {parent.deceased && <LotusIcon className="ml-1 inline-block h-4 w-4 align-middle" />}
+          {parent.deceased && (
+            <span className="ml-1 inline-flex items-center align-middle">
+              (<LotusIcon className="mx-0.5 inline-block h-6 w-6" />)
+            </span>
+          )}
         </p>
       ))}
       <p className="mx-auto mt-2 max-w-[16rem] text-sm text-ink-soft md:text-base">
@@ -307,7 +352,36 @@ function FamilyBlock({ family }) {
 
 function CeremonySection() {
   return (
-    <section className="bg-cream px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
+    <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
+      <FloralImage
+        motif="branch-1"
+        fadeDirection="left"
+        className="absolute -right-10 top-0 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
+      />
+      <FloralImage
+        motif="branch-2"
+        className="absolute -right-6 -top-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+      />
+      <FloralImage
+        motif="branch-5"
+        className="absolute -bottom-6 -left-6 h-24 w-24 rotate-180 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+      />
+      <FloralImage
+        motif="branch-3"
+        className="absolute left-1/2 top-6 h-16 w-16 -translate-x-1/2 bg-rose/60 sm:h-20 sm:w-20"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute left-[12%] top-16 h-7 w-7 bg-rose/60 sm:h-9 sm:w-9"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute right-[15%] top-32 h-6 w-6 -scale-x-100 bg-rose/60 sm:h-8 sm:w-8"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute bottom-16 left-[20%] h-5 w-5 bg-rose/60 sm:h-7 sm:w-7"
+      />
       <div className="mx-auto max-w-3xl">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Lễ Thành Hôn
@@ -320,15 +394,17 @@ function CeremonySection() {
         </div>
 
         <p className="mx-auto mt-12 max-w-sm text-sm uppercase leading-relaxed tracking-widest text-ink-soft md:max-w-md md:text-base">
-          Trân trọng báo tin lễ thành hôn của con chúng tôi
+          Trân trọng báo tin
+          <br />
+          Lễ thành hôn của con chúng tôi
         </p>
 
-        <p className="mt-6 font-script text-4xl text-ink md:text-5xl">{COUPLE.groomFull}</p>
+        <h2 className="mt-6 font-script text-4xl text-ink md:text-5xl">{COUPLE.groomFull}</h2>
         <p className="mt-1 text-xs uppercase tracking-widest text-ink-soft md:text-sm">Út Nam</p>
 
         <span className="mt-4 block font-serif text-2xl text-gold md:text-3xl">&</span>
 
-        <p className="mt-4 font-script text-4xl text-ink md:text-5xl">{COUPLE.brideFull}</p>
+        <h2 className="mt-4 font-script text-4xl text-ink md:text-5xl">{COUPLE.brideFull}</h2>
         <p className="mt-1 text-xs uppercase tracking-widest text-ink-soft md:text-sm">Út Nữ</p>
 
         <p className="mx-auto mt-10 max-w-sm text-sm uppercase leading-relaxed tracking-widest text-ink-soft md:max-w-md md:text-base">
@@ -338,7 +414,7 @@ function CeremonySection() {
         <p className="mt-6 text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Vào lúc
         </p>
-        <p className="mt-2 font-serif text-5xl text-ink md:text-6xl">{WEDDING_DATE.time}</p>
+        <p className="mt-2 text-4xl font-light text-ink md:text-5xl">{WEDDING_DATE.time}</p>
 
         <div className="mt-6 flex items-center justify-center gap-3 text-xs uppercase tracking-widest text-ink-soft md:text-sm">
           <span>{WEDDING_DATE.weekday}</span>
@@ -347,7 +423,7 @@ function CeremonySection() {
           <span className="h-3 w-px bg-gold-light/60" />
           <span>Tháng {WEDDING_DATE.month}</span>
         </div>
-        <p className="mt-2 font-serif text-4xl tracking-widest text-gold md:text-5xl">
+        <p className="mt-2 text-4xl font-light tracking-widest text-gold md:text-5xl">
           {WEDDING_DATE.year}
         </p>
         <p className="mt-2 text-xs text-ink-soft md:text-sm">({WEDDING_DATE.lunar})</p>
@@ -428,7 +504,7 @@ function GallerySection() {
   const showNext = () => setActiveIndex((index) => (index + 1) % GALLERY_PHOTOS.length)
 
   return (
-    <section className="bg-cream-dark px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
+    <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
       <div className="mx-auto max-w-3xl">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Album Ảnh Cưới
@@ -441,13 +517,13 @@ function GallerySection() {
               key={photo.id}
               type="button"
               onClick={() => setActiveIndex(index)}
-              className="group overflow-hidden rounded-lg border border-gold-light/40"
+              className="group mx-auto w-full max-w-[270px] overflow-hidden rounded-lg border border-gold-light/40"
             >
               <img
                 src={photo.src}
                 alt={photo.alt}
                 onError={fallbackToPlaceholder(photo.fallback)}
-                className="aspect-[4/5] w-full object-cover transition duration-300 group-hover:scale-105"
+                className="aspect-square w-full object-cover transition duration-300 group-hover:scale-105"
               />
             </button>
           ))}
@@ -470,33 +546,120 @@ function GallerySection() {
 /* SECTION 4 — THÔNG TIN TIỆC CƯỚI                                      */
 /* ------------------------------------------------------------------ */
 
+const CALENDAR_WEEKDAY_HEADERS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+
+// Vietnamese calendars start the week on Thứ Hai (Mon); JS getDay() is 0=Sun.
+function buildCalendarWeeks(year, month1Indexed) {
+  const monthIndex0 = month1Indexed - 1
+  const daysInMonth = new Date(year, monthIndex0 + 1, 0).getDate()
+  const firstWeekdayJs = new Date(year, monthIndex0, 1).getDay()
+  const firstWeekdayMonStart = (firstWeekdayJs + 6) % 7
+
+  const cells = Array(firstWeekdayMonStart).fill(null)
+  for (let day = 1; day <= daysInMonth; day += 1) cells.push(day)
+  while (cells.length % 7 !== 0) cells.push(null)
+
+  const weeks = []
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7))
+  return weeks
+}
+
+function WeddingCalendar() {
+  const year = Number(WEDDING_DATE.year)
+  const month = Number(WEDDING_DATE.month)
+  const highlightDay = Number(WEDDING_DATE.day)
+  const weeks = buildCalendarWeeks(year, month)
+
+  return (
+    <div className="mx-auto mt-8 max-w-xs rounded-lg border border-gold-light/40 bg-cream p-4 shadow-sm">
+      <p className="text-center font-light text-base text-ink md:text-lg">
+        Tháng {month} / {year}
+      </p>
+
+      <div className="mt-3 grid grid-cols-7 text-center text-[10px] font-medium uppercase tracking-wide text-gold md:text-xs">
+        {CALENDAR_WEEKDAY_HEADERS.map((label) => (
+          <span key={label}>{label}</span>
+        ))}
+      </div>
+
+      <div className="mt-2 space-y-2 border-t border-gold-light/40 pt-2">
+        {weeks.map((week, weekIndex) => (
+          <div key={weekIndex} className="grid grid-cols-7 text-center text-xs md:text-sm">
+            {week.map((day, dayIndex) => (
+              <span key={dayIndex} className="flex h-9 items-center justify-center">
+                {day === null ? null : day === highlightDay ? (
+                  <span className="relative flex h-9 w-9 items-center justify-center text-red-600">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="absolute inset-0 h-full w-full"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 21s-7.5-4.6-10-9.1C.5 8.6 2 5 5.5 5c2 0 3.5 1.2 4.5 2.7C11 6.2 12.5 5 14.5 5 18 5 19.5 8.6 18 11.9 15.5 16.4 12 21 12 21z" />
+                    </svg>
+                    <span className="relative text-sm font-bold text-cream">{day}</span>
+                  </span>
+                ) : (
+                  <span className="text-ink-soft">{day}</span>
+                )}
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function PartyInviteSection() {
   return (
-    <section className="bg-cream px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
+    <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
+      <FloralImage
+        motif="branch-6"
+        className="absolute -left-6 -top-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-36 md:w-36"
+      />
+      <FloralImage
+        motif="branch-3"
+        className="absolute -bottom-6 -right-6 h-24 w-24 rotate-180 bg-rose sm:h-32 sm:w-32 md:h-36 md:w-36"
+      />
       <div className="mx-auto max-w-2xl">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
-          Tiệc Cưới
+          Thông tin tiệc cưới
         </p>
         <SectionDivider />
-
-        <p className="mt-6 text-sm text-ink-soft md:text-base">Trân trọng kính mời</p>
-        <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-ink-soft md:max-w-md md:text-base">
-          Đến dự bữa tiệc chung vui cùng gia đình chúng tôi
+        <p className="mt-6 text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
+          Tiệc cưới sẽ diễn ra vào lúc
         </p>
+        <p className="mt-2 text-4xl font-light text-ink md:text-5xl">{TIMELINE[1].time}</p>
 
-        <div className="mt-8 flex items-center justify-center gap-6 font-serif text-lg text-ink md:text-xl">
-          <span>Vào lúc {TIMELINE[0].time}</span>
-          <span className="h-4 w-px bg-gold-light/60" />
+        <div className="mt-6 flex items-center justify-center gap-3 text-xs uppercase tracking-widest text-ink-soft md:text-sm">
           <span>{WEDDING_DATE.weekday}</span>
+          <span className="h-3 w-px bg-gold-light/60" />
+          <span>{WEDDING_DATE.day}</span>
+          <span className="h-3 w-px bg-gold-light/60" />
+          <span>Tháng {WEDDING_DATE.month}</span>
         </div>
-        <p className="mt-1 font-serif text-xl tracking-widest text-gold md:text-2xl">
-          {WEDDING_DATE.display}
+        <p className="mt-2 text-4xl font-light tracking-widest text-gold md:text-5xl">
+          {WEDDING_DATE.year}
         </p>
-        <p className="mt-1 text-xs text-ink-soft md:text-sm">{WEDDING_DATE.lunar}</p>
+        <p className="mt-2 text-xs text-ink-soft md:text-sm">({WEDDING_DATE.lunar})</p>
 
-        <p className="mx-auto mt-8 max-w-sm text-sm leading-relaxed text-ink-soft md:max-w-md md:text-base">
-          Sự hiện diện của quý khách là niềm vinh hạnh cho gia đình chúng tôi
-        </p>
+        <div className="mt-8 flex items-center justify-center gap-10">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-widest text-gold md:text-sm">
+              {TIMELINE[0].label}
+            </p>
+            <p className="mt-1 text-lg font-light text-ink md:text-xl">{TIMELINE[0].time}</p>
+          </div>
+          <span className="h-8 w-px bg-gold-light/60" />
+          <div>
+            <p className="text-xs font-medium uppercase tracking-widest text-gold md:text-sm">
+              {TIMELINE[1].label}
+            </p>
+            <p className="mt-1 text-lg font-light text-ink md:text-xl">{TIMELINE[1].time}</p>
+          </div>
+        </div>
+        <WeddingCalendar />
       </div>
     </section>
   )
@@ -512,18 +675,19 @@ function LocationSection() {
   const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`
 
   return (
-    <section className="bg-cream-dark px-6 py-16 sm:px-10 md:px-16 md:py-24">
-      <div className="mx-auto grid max-w-4xl grid-cols-1 items-start gap-10 text-center md:grid-cols-2 md:gap-16 md:text-left">
+    <section className="relative px-6 py-16 sm:px-10 md:px-16 md:py-24">
+      <FloralImage
+        motif="branch-7"
+        className="absolute -bottom-6 -right-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+      />
+      <div className="mx-auto max-w-2xl text-center">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
             Địa Điểm
           </p>
-          <div className="md:hidden">
-            <SectionDivider />
-          </div>
-          <div className="mt-4 hidden h-px w-16 bg-gold-light/60 md:block" />
+          <SectionDivider />
 
-          <h2 className="mt-6 font-script text-4xl text-ink md:text-5xl">{RECEPTION.venue}</h2>
+          <h2 className="mt-6 font-serif text-4xl text-ink md:text-5xl">{RECEPTION.venue}</h2>
           <p className="mt-1 text-sm font-medium uppercase tracking-widest text-gold md:text-base">
             {RECEPTION.hall}
           </p>
@@ -535,11 +699,11 @@ function LocationSection() {
             rel="noopener noreferrer"
             className="mt-6 inline-block rounded-full border border-gold px-6 py-2 text-xs font-medium uppercase tracking-widest text-gold transition hover:bg-gold hover:text-cream md:text-sm"
           >
-            Chỉ đường
+            Bản đồ &amp; Chỉ đường
           </a>
         </div>
 
-        <div className="overflow-hidden rounded-lg border border-gold-light/40 shadow-sm">
+        <div className="mt-8 overflow-hidden rounded-lg border border-gold-light/40 shadow-sm">
           <iframe
             title={`Bản đồ đến ${RECEPTION.venue}`}
             src={mapEmbedSrc}
@@ -560,7 +724,23 @@ function LocationSection() {
 
 function TimelineSection() {
   return (
-    <section className="bg-cream px-6 py-16 sm:px-10 md:px-16 md:py-24">
+    <section className="relative px-6 py-16 sm:px-10 md:px-16 md:py-24">
+      <FloralImage
+        motif="branch-1"
+        className="absolute -left-8 top-1/2 h-40 w-32 -translate-y-1/2 bg-rose/60 sm:h-56 sm:w-40 md:h-64 md:w-48"
+      />
+      <FloralImage
+        motif="branch-6"
+        className="absolute -right-8 top-1/2 h-40 w-32 -translate-y-1/2 rotate-180 bg-rose/60 sm:h-56 sm:w-40 md:h-64 md:w-48"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute right-[18%] top-8 h-8 w-8 bg-rose/60 sm:h-10 sm:w-10"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute bottom-10 left-[15%] h-6 w-6 -scale-x-100 bg-rose/60 sm:h-8 sm:w-8"
+      />
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Lịch Trình
@@ -570,17 +750,23 @@ function TimelineSection() {
 
       <ol className="mx-auto mt-12 max-w-md">
         {TIMELINE.map((item, index) => (
-          <li key={item.time} className="flex gap-4 pb-10 last:pb-0 sm:gap-6">
-            <span className="w-14 shrink-0 text-right font-serif text-lg text-gold sm:w-16 sm:text-xl">
+          <li key={item.time} className="flex gap-4 sm:gap-6">
+            <span className="w-14 shrink-0 text-right font-light text-lg text-gold sm:w-16 md:text-xl">
               {item.time}
             </span>
             <span className="flex flex-col items-center">
-              <span className="h-3 w-3 shrink-0 rounded-full border-2 border-gold bg-cream" />
+              <span className="h-3 w-3 shrink-0 rounded-full bg-gold" />
               {index < TIMELINE.length - 1 && (
                 <span className="mt-1 w-px flex-1 bg-gold-light/50" />
               )}
             </span>
-            <span className="pt-0.5 text-left text-sm text-ink md:text-base">{item.label}</span>
+            <span
+              className={`pt-0.5 text-left text-sm text-ink md:text-base ${
+                index < TIMELINE.length - 1 ? 'pb-16 md:pb-20' : ''
+              }`}
+            >
+              {item.label}
+            </span>
           </li>
         ))}
       </ol>
@@ -614,7 +800,11 @@ function GuestbookSection() {
   }
 
   return (
-    <section className="bg-cream-dark px-6 py-16 sm:px-10 md:px-16 md:py-24">
+    <section className="relative px-6 py-16 sm:px-10 md:px-16 md:py-24">
+      <FloralImage
+        motif="branch-3"
+        className="absolute -bottom-6 -left-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+      />
       <div className="mx-auto max-w-xl text-center">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Sổ Lưu Bút
@@ -680,7 +870,7 @@ function GuestbookSection() {
 }
 
 /* ------------------------------------------------------------------ */
-/* SECTION 8 — PHONG BAO MỪNG CƯỚI                                       */
+/* SECTION 8 —  Gửi lời chúc yêu thương dành tặng                                  */
 /* Phong bao đỏ-vàng kim truyền thống, tách biệt màu với phần còn lại     */
 /* của thiệp — theo đúng phong tục lì xì/mừng cưới.                      */
 /* ------------------------------------------------------------------ */
@@ -906,7 +1096,7 @@ function GiftModal({ onClose }) {
             className="font-serif text-2xl font-bold uppercase tracking-wide text-white"
             style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}
           >
-            Phong Bao Mừng Cưới
+            Gửi lời chúc yêu thương dành tặng cho <br /> Thiên Phúc & Minh Châu
           </h2>
         </div>
 
@@ -948,17 +1138,22 @@ function GiftSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
-    <section className="bg-cream px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
-      <h2 className="font-serif text-2xl font-bold uppercase tracking-wide text-gold-dark md:text-3xl">
-        Phong Bao Mừng Cưới
-      </h2>
-
+    <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
+      <FloralImage
+        motif="branch-5"
+        className="absolute -right-6 -top-6 h-24 w-24 bg-rose/60 sm:h-28 sm:w-28"
+      />
+      <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
+        Gửi lời chúc yêu thương dành tặng {COUPLE.groomShort} &amp; {COUPLE.brideShort}
+      </p>
+      <SectionDivider />
       <div className="mt-10">
         <GiftEnvelopeButton onOpen={() => setIsModalOpen(true)} />
       </div>
 
       <p className="mx-auto mt-10 max-w-sm text-sm leading-relaxed text-ink-soft md:max-w-md md:text-base">
-        Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi!
+        Sự hiện diện của quý quan khách <br />
+        là niềm vinh hạnh của gia đình chúng tôi
       </p>
 
       {isModalOpen && <GiftModal onClose={() => setIsModalOpen(false)} />}
@@ -972,8 +1167,11 @@ function GiftSection() {
 
 function FooterSection() {
   return (
-    <section className="relative overflow-hidden bg-cream-dark px-6 py-16 text-center sm:px-10 md:px-16">
-      <FloralMotif className="absolute -top-6 left-1/2 h-24 w-24 -translate-x-1/2 rotate-45 text-gold/60 md:h-28 md:w-28" />
+    <section className="relative px-6 py-16 text-center sm:px-10 md:px-16">
+      <FloralImage
+        motif="branch-6"
+        className="absolute -top-6 left-1/2 h-24 w-24 -translate-x-1/2 bg-rose/60 md:h-28 md:w-28"
+      />
 
       <p className="mt-16 text-sm leading-relaxed text-ink-soft md:text-base">
         Rất hân hạnh được đón tiếp
@@ -992,10 +1190,15 @@ function FooterSection() {
 /* APP — overlay mở thiệp, nhạc nền, auto-scroll                        */
 /* ------------------------------------------------------------------ */
 
+// Tạm thời ẩn màn hình khoá "Mở Thiệp" — đổi lại thành true để bật lại.
+const ENABLE_OPENING_SCREEN = false
+// Tạm thời ẩn section "Sổ Lưu Bút" — đổi lại thành true để bật lại.
+const ENABLE_GUESTBOOK_SECTION = false
+
 function App() {
   const audioRef = useRef(null)
   const userInteractedRef = useRef(false)
-  const [isOpened, setIsOpened] = useState(false)
+  const [isOpened, setIsOpened] = useState(!ENABLE_OPENING_SCREEN)
   const [isOverlayClosing, setIsOverlayClosing] = useState(false)
   const [isMusicPlaying, setIsMusicPlaying] = useState(false)
 
@@ -1027,7 +1230,7 @@ function App() {
   // Auto-scroll bằng requestAnimationFrame sau khi mở thiệp, dừng vĩnh viễn
   // ngay khi userInteractedRef được đánh dấu (xem effect phía trên).
   useEffect(() => {
-    if (!isOpened || userInteractedRef.current) return undefined
+    if (!ENABLE_OPENING_SCREEN || !isOpened || userInteractedRef.current) return undefined
 
     let rafId = null
 
@@ -1074,30 +1277,26 @@ function App() {
   }
 
   return (
-    <div className="text-ink">
-      <audio ref={audioRef} src="/audio/my-love.mp3" loop preload="none" />
+    <div className="min-h-screen w-full overflow-x-hidden bg-cream-dark">
+      <div className="relative mx-auto max-w-3xl overflow-hidden bg-cream text-ink md:shadow-2xl">
+        <audio ref={audioRef} src="/audio/my-love.mp3" loop preload="none" />
 
-      <HeroSection />
-      <CeremonySection />
-      <GallerySection />
-      <PartyInviteSection />
-      <LocationSection />
-      <TimelineSection />
-      <GuestbookSection />
-      <GiftSection />
-      <FooterSection />
+        <HeroSection
+          showButton={ENABLE_OPENING_SCREEN && !isOpened}
+          isClosing={isOverlayClosing}
+          onOpen={handleOpenInvitation}
+        />
+        <CeremonySection />
+        <GallerySection />
+        <PartyInviteSection />
+        <LocationSection />
+        <TimelineSection />
+        {ENABLE_GUESTBOOK_SECTION && <GuestbookSection />}
+        <GiftSection />
+        <FooterSection />
+      </div>
 
       <MusicToggleButton isPlaying={isMusicPlaying} onToggle={toggleMusic} />
-
-      {!isOpened && (
-        <div
-          className={`fixed inset-0 z-50 transition-opacity duration-500 ${
-            isOverlayClosing ? 'pointer-events-none opacity-0' : 'opacity-100'
-          }`}
-        >
-          <HeroSection showButton onOpen={handleOpenInvitation} />
-        </div>
-      )}
     </div>
   )
 }
