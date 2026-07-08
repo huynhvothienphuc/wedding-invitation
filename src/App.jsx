@@ -337,14 +337,14 @@ function CeremonySection() {
         fadeDirection="left"
         className="absolute -left-10 top-10 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
       />
-      <FloralImage
+      {/* <FloralImage
         motif="branch-2"
         className="absolute -left-6 -top-6 h-24 w-24 rotate-60 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
       <FloralImage
         motif="branch-5"
         className="absolute -bottom-6 -left-6 h-24 w-24 rotate-120 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
-      />
+      /> */}
       {/* 
       <FloralImage
         motif="branch-1"
