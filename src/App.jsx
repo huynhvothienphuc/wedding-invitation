@@ -1192,10 +1192,10 @@ function App() {
     }
   }, [])
 
-  // Auto-scroll bằng requestAnimationFrame sau khi mở thiệp, dừng vĩnh viễn
+  // Auto-scroll bằng requestAnimationFrame ngay khi vào trang, dừng vĩnh viễn
   // ngay khi userInteractedRef được đánh dấu (xem effect phía trên).
   useEffect(() => {
-    if (!ENABLE_OPENING_SCREEN || !isOpened || userInteractedRef.current) return undefined
+    if (!isOpened || userInteractedRef.current) return undefined
 
     let rafId = null
 
@@ -1223,6 +1223,30 @@ function App() {
       .then(() => setIsMusicPlaying(true))
       .catch(() => setIsMusicPlaying(false))
   }
+
+  // Tự động phát nhạc ngay khi vào trang. Trình duyệt thường chặn autoplay
+  // có âm thanh nếu chưa có tương tác — nếu bị chặn, tự thử lại ngay khi
+  // người dùng chạm/cuộn/click lần đầu tiên ở bất kỳ đâu trên trang.
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return undefined
+
+    audio
+      .play()
+      .then(() => setIsMusicPlaying(true))
+      .catch(() => {
+        const retryOnInteraction = () => {
+          playMusic()
+        }
+        const events = ['click', 'touchstart', 'scroll', 'keydown', 'wheel']
+        events.forEach((event) =>
+          window.addEventListener(event, retryOnInteraction, { once: true, passive: true })
+        )
+        return () => {
+          events.forEach((event) => window.removeEventListener(event, retryOnInteraction))
+        }
+      })
+  }, [])
 
   const toggleMusic = () => {
     const audio = audioRef.current
