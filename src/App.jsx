@@ -211,7 +211,19 @@ function MusicToggleButton({ isPlaying, onToggle }) {
 function HeroSection({ showButton = false, onOpen, isClosing = false }) {
   return (
     <section className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 py-16 text-center sm:px-10 md:px-16">
-
+      <FloralImage
+        motif="branch-2"
+        className="absolute -left-6 -top-0 h-20 w-20  bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
+      />
+      <FloralImage
+        motif="branch-1"
+        className="absolute left-12 top-10 h-20 w-20  bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
+      />
+      <FloralImage
+        motif="branch-1"
+        className="absolute -left-10 top-40 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
+      />
+      {/* Trai */}
       <FloralImage
         motif="branch-4"
         className="absolute -bottom-0 -right-4 h-32 w-32 rotate-240 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
@@ -221,36 +233,21 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
         className="absolute -right-4 -top-0 h-32 w-32 -scale-x-100 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
       />
       <FloralImage
-        motif="branch-2"
-        className="absolute -left-6 -top-0 h-20 w-20  bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
-      />
-      <FloralImage
-        motif="branch-1"
-        className="absolute -left-6  h-20 w-20  bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
-      />
-      <FloralImage
-        motif="branch-2"
-        className="absolute -bottom-6 -left-6 h-20 w-20 bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
-      />
-      <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter-flipped left-[23%] top-50 h-8 w-8 bg-rose sm:h-10 sm:w-10"
       />
-      {/* <FloralImage
+      <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter-flipped bottom-28 left-[12%] h-8 w-8 bg-rose sm:h-11 sm:w-11"
-      /> */}
-      {/* <FloralImage
+      />
+      <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter-flipped bottom-18 left-[20%] h-8 w-8 bg-rose sm:h-11 sm:w-11"
-      /> */}
-      {/* <FloralImage
+      />
+      <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter bottom-16 right-[16%] h-8 w-8 bg-rose/60 sm:h-10 sm:w-10"
-      /> */}
-      {/* DONE */}
-
-
+      />
 
       <h1 className="mt-6 flex flex-col items-center gap-3 font-script leading-snug text-name sm:gap-4 md:gap-5">
         <span className="text-4xl sm:text-6xl md:text-7xl">{COUPLE.groomShort}</span>
@@ -311,12 +308,12 @@ function CeremonySection() {
   return (
     <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
       <FloralImage
-        motif="branch-1"
-        className="absolute -left-10 top-10 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
+        motif="branch-2"
+        className="absolute -top-10  -left-6 h-20 w-20 bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
       />
       <FloralImage
         motif="branch-2"
-        className="absolute -left-6 -top-6 h-24 w-24 rotate-60 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+        className="absolute -left-6 top-10 h-24 w-24 rotate-60 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
       <FloralImage
         motif="branch-5"
