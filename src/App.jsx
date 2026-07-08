@@ -281,7 +281,7 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
           {COUPLE.brideShort}
           <FloralImage
             motif="butterfly"
-            className="absolute animate-butterfly-flutter-centered -right-8 top-1/2 h-8 w-8 bg-rose/60 sm:-right-11 sm:h-10 sm:w-10 md:-right-15 md:h-11 md:w-11"
+            className="absolute animate-butterfly-flutter-centered -right-10 top-1/2 h-8 w-8 bg-rose/60 sm:-right-13 sm:h-10 sm:w-10 md:-right-17 md:h-11 md:w-11"
           />
         </span>
       </h1>
@@ -332,7 +332,7 @@ function FamilyBlock({ family }) {
 function CeremonySection() {
   return (
     <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
-      {/* <FloralImage
+      <FloralImage
         motif="branch-1"
         fadeDirection="left"
         className="absolute -left-10 top-10 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
@@ -345,6 +345,7 @@ function CeremonySection() {
         motif="branch-5"
         className="absolute -bottom-6 -left-6 h-24 w-24 rotate-120 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
+      {/* 
       <FloralImage
         motif="branch-1"
         className="absolute -bottom-7 left-30 h-24 w-24  bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
