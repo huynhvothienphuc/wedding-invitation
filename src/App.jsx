@@ -353,7 +353,6 @@ function CeremonySection() {
         motif="branch-3"
         className="absolute bottom-30 -right-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
-      {/* 
       <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter left-[12%] top-16 h-7 w-7 bg-rose sm:h-9 sm:w-9"
@@ -365,7 +364,7 @@ function CeremonySection() {
       <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter bottom-16 left-[20%] h-5 w-5 bg-rose sm:h-7 sm:w-7"
-      /> */}
+      />
       <div className="mx-auto max-w-3xl">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Lễ Thành Hôn
