@@ -332,20 +332,19 @@ function FamilyBlock({ family }) {
 function CeremonySection() {
   return (
     <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
-      <FloralImage
+      {/* <FloralImage
         motif="branch-1"
         fadeDirection="left"
         className="absolute -left-10 top-10 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
-      />
-      {/* <FloralImage
+      /> */}
+      <FloralImage
         motif="branch-2"
         className="absolute -left-6 -top-6 h-24 w-24 rotate-60 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
       <FloralImage
         motif="branch-5"
         className="absolute -bottom-6 -left-6 h-24 w-24 rotate-120 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
-      /> */}
-      {/* 
+      />
       <FloralImage
         motif="branch-1"
         className="absolute -bottom-7 left-30 h-24 w-24  bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
@@ -354,6 +353,7 @@ function CeremonySection() {
         motif="branch-3"
         className="absolute bottom-30 -right-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
+      {/* 
       <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter left-[12%] top-16 h-7 w-7 bg-rose sm:h-9 sm:w-9"
