@@ -155,40 +155,18 @@ async function submitGuestbookEntry({ name, message }) {
 // Hoạ tiết hoa mộc lan thật (đã tách từ public/floral/floral.png, xem
 // scripts xử lý), dùng làm CSS mask nên có thể tô lại màu bằng bg-* như
 // SVG currentColor — dùng đúng 2 mức: bg-rose (hoa chính) và bg-rose/60 (phụ/bướm/nền mờ).
-// Truyền fadeDirection ('left' | 'right' | 'top' | 'bottom') để hoa mờ dần
-// hoà vào nền thay vì có viền vuông rõ nét.
-function FloralImage({ motif, className = '', fadeDirection }) {
+function FloralImage({ motif, className = '' }) {
   const maskUrl = `url(/floral/motifs/${motif}.png)`
-  const fadeGradient = {
-    left: 'to left',
-    right: 'to right',
-    top: 'to top',
-    bottom: 'to bottom',
-  }[fadeDirection]
-
-  const style = fadeGradient
-    ? {
-      WebkitMaskImage: `${maskUrl}, linear-gradient(${fadeGradient}, black, rgba(0,0,0,0.5))`,
-      maskImage: `${maskUrl}, linear-gradient(${fadeGradient}, black, rgba(0,0,0,0.5))`,
-      WebkitMaskSize: 'contain, 100% 100%',
-      maskSize: 'contain, 100% 100%',
-      WebkitMaskRepeat: 'no-repeat, no-repeat',
-      maskRepeat: 'no-repeat, no-repeat',
-      WebkitMaskPosition: 'center, center',
-      maskPosition: 'center, center',
-      WebkitMaskComposite: 'source-in',
-      maskComposite: 'intersect',
-    }
-    : {
-      WebkitMaskImage: maskUrl,
-      maskImage: maskUrl,
-      WebkitMaskSize: 'contain',
-      maskSize: 'contain',
-      WebkitMaskRepeat: 'no-repeat',
-      maskRepeat: 'no-repeat',
-      WebkitMaskPosition: 'center',
-      maskPosition: 'center',
-    }
+  const style = {
+    WebkitMaskImage: maskUrl,
+    maskImage: maskUrl,
+    WebkitMaskSize: 'contain',
+    maskSize: 'contain',
+    WebkitMaskRepeat: 'no-repeat',
+    maskRepeat: 'no-repeat',
+    WebkitMaskPosition: 'center',
+    maskPosition: 'center',
+  }
 
   return <div aria-hidden="true" className={className} style={style} ></div>
 }
@@ -332,11 +310,10 @@ function FamilyBlock({ family }) {
 function CeremonySection() {
   return (
     <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
-      {/* <FloralImage
+      <FloralImage
         motif="branch-1"
-        fadeDirection="left"
         className="absolute -left-10 top-10 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
-      /> */}
+      />
       <FloralImage
         motif="branch-2"
         className="absolute -left-6 -top-6 h-24 w-24 rotate-60 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
@@ -347,7 +324,7 @@ function CeremonySection() {
       />
       <FloralImage
         motif="branch-1"
-        className="absolute -bottom-7 left-30 h-24 w-24  bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
+        className="absolute -bottom-7 left-14 h-24 w-24 bg-rose sm:left-20 sm:h-32 sm:w-32 md:left-24 md:h-40 md:w-40"
       />
       <FloralImage
         motif="branch-3"
