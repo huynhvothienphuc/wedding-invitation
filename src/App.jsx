@@ -212,12 +212,8 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
   return (
     <section className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 py-16 text-center sm:px-10 md:px-16">
       <FloralImage
-        motif="branch-2"
+        motif="branch-4"
         className="absolute -left-6 -top-0 h-20 w-20  bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
-      />
-      <FloralImage
-        motif="branch-1"
-        className="absolute left-12 top-10 h-20 w-20  bg-rose sm:h-28 sm:w-28 md:h-32 md:w-32"
       />
       <FloralImage
         motif="branch-1"
