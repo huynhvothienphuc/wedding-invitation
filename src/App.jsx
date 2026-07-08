@@ -258,18 +258,18 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
         motif="butterfly"
         className="absolute animate-butterfly-flutter-flipped left-[23%] top-50 h-8 w-8 bg-rose sm:h-10 sm:w-10"
       />
-      <FloralImage
+      {/* <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter-flipped bottom-28 left-[12%] h-8 w-8 bg-rose sm:h-11 sm:w-11"
-      />
-      <FloralImage
+      /> */}
+      {/* <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter-flipped bottom-18 left-[20%] h-8 w-8 bg-rose sm:h-11 sm:w-11"
-      />
-      <FloralImage
+      /> */}
+      {/* <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter bottom-16 right-[16%] h-8 w-8 bg-rose/60 sm:h-10 sm:w-10"
-      />
+      /> */}
       {/* DONE */}
 
 
@@ -281,7 +281,7 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
           {COUPLE.brideShort}
           <FloralImage
             motif="butterfly"
-            className="absolute animate-butterfly-flutter-centered  top-1/2 h-8 w-8 bg-rose/60 sm:-right-11 sm:h-10 sm:w-10 md:-right-15 md:h-11 md:w-11"
+            className="absolute animate-butterfly-flutter-centered -right-8 top-1/2 h-8 w-8 bg-rose/60 sm:-right-11 sm:h-10 sm:w-10 md:-right-15 md:h-11 md:w-11"
           />
         </span>
       </h1>
@@ -313,11 +313,6 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
 /* SECTION 2 — LỄ CƯỚI (GIA TIÊN)                                       */
 /* ------------------------------------------------------------------ */
 
-// Hoa sen — thay cho ký hiệu đánh dấu người đã khuất.
-function LotusIcon({ className = '' }) {
-  return <img src="/lotus.png" alt="đã mất" className={className} />
-}
-
 function FamilyBlock({ family }) {
   return (
     <div className="text-center">
@@ -325,11 +320,6 @@ function FamilyBlock({ family }) {
       {family.parents.map((parent) => (
         <p key={parent.name} className="font-serif text-sm font-medium leading-snug text-ink sm:text-lg md:text-xl">
           {parent.name}
-          {parent.deceased && (
-            <span className="ml-1 inline-flex items-center align-middle">
-              (<LotusIcon className="mx-0.5 inline-block h-5 w-5 sm:h-6 sm:w-6" />)
-            </span>
-          )}
         </p>
       ))}
       <p className="mx-auto mt-2 max-w-[9rem] text-xs leading-snug text-ink-soft sm:max-w-[16rem] sm:text-sm md:text-base">
@@ -342,7 +332,7 @@ function FamilyBlock({ family }) {
 function CeremonySection() {
   return (
     <section className="relative px-6 py-16 text-center sm:px-10 md:px-16 md:py-24">
-      <FloralImage
+      {/* <FloralImage
         motif="branch-1"
         fadeDirection="left"
         className="absolute -left-10 top-10 h-full w-2/3 bg-rose/60 sm:w-1/2 md:w-2/5"
@@ -374,7 +364,7 @@ function CeremonySection() {
       <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter bottom-16 left-[20%] h-5 w-5 bg-rose sm:h-7 sm:w-7"
-      />
+      /> */}
       <div className="mx-auto max-w-3xl">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Lễ Thành Hôn
