@@ -11,6 +11,11 @@ const COUPLE = {
   brideShort: 'Minh Châu',
 }
 
+// Phần họ + tên đệm đứng trước tên gọi (Thiên Phúc / Minh Châu) — tách riêng
+// để khi xuống dòng không bao giờ làm rời "Thiên Phúc" hay "Minh Châu".
+const GROOM_NAME_PREFIX = COUPLE.groomFull.replace(COUPLE.groomShort, '').trim()
+const BRIDE_NAME_PREFIX = COUPLE.brideFull.replace(COUPLE.brideShort, '').trim()
+
 const WEDDING_DATE = {
   display: '02.08.2026',
   weekday: 'Chủ Nhật',
@@ -316,18 +321,18 @@ function LotusIcon({ className = '' }) {
 function FamilyBlock({ family }) {
   return (
     <div className="text-center">
-      <p className="text-sm text-ink-soft md:text-base">Ba & Mẹ</p>
+      <p className="text-xs text-ink-soft sm:text-sm md:text-base">Ba & Mẹ</p>
       {family.parents.map((parent) => (
-        <p key={parent.name} className="font-serif text-lg font-medium text-ink md:text-xl">
+        <p key={parent.name} className="font-serif text-sm font-medium leading-snug text-ink sm:text-lg md:text-xl">
           {parent.name}
           {parent.deceased && (
             <span className="ml-1 inline-flex items-center align-middle">
-              (<LotusIcon className="mx-0.5 inline-block h-6 w-6" />)
+              (<LotusIcon className="mx-0.5 inline-block h-5 w-5 sm:h-6 sm:w-6" />)
             </span>
           )}
         </p>
       ))}
-      <p className="mx-auto mt-2 max-w-[16rem] text-sm text-ink-soft md:text-base">
+      <p className="mx-auto mt-2 max-w-[9rem] text-xs leading-snug text-ink-soft sm:max-w-[16rem] sm:text-sm md:text-base">
         {family.address}
       </p>
     </div>
@@ -350,7 +355,7 @@ function CeremonySection() {
         motif="branch-5"
         className="absolute -bottom-6 -left-6 h-24 w-24 rotate-120 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
-       <FloralImage
+      <FloralImage
         motif="branch-1"
         className="absolute -bottom-7 left-30 h-24 w-24  bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
@@ -376,7 +381,7 @@ function CeremonySection() {
         </p>
         <SectionDivider />
 
-        <div className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-8 md:gap-16">
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-8 md:gap-16">
           <FamilyBlock family={GROOM_FAMILY} />
           <FamilyBlock family={BRIDE_FAMILY} />
         </div>
@@ -387,12 +392,16 @@ function CeremonySection() {
           Lễ thành hôn của con chúng tôi
         </p>
 
-        <h2 className="mt-6 font-script text-4xl leading-snug text-name md:text-5xl">{COUPLE.groomFull}</h2>
+        <h2 className="mt-6 whitespace-nowrap font-script text-3xl leading-snug text-name sm:text-4xl md:text-5xl">
+          {GROOM_NAME_PREFIX} {COUPLE.groomShort}
+        </h2>
         <p className="mt-1 text-xs uppercase tracking-widest text-ink-soft md:text-sm">Út Nam</p>
 
         <span className="mt-4 block font-serif text-2xl text-gold md:text-3xl">&</span>
 
-        <h2 className="mt-4 font-script text-4xl leading-snug text-name md:text-5xl">{COUPLE.brideFull}</h2>
+        <h2 className="mt-4 whitespace-nowrap font-script text-3xl leading-snug text-name sm:text-4xl md:text-5xl">
+          {BRIDE_NAME_PREFIX} {COUPLE.brideShort}
+        </h2>
         <p className="mt-1 text-xs uppercase tracking-widest text-ink-soft md:text-sm">Út Nữ</p>
 
         <p className="mx-auto mt-10 max-w-sm text-sm uppercase leading-relaxed tracking-widest text-ink-soft md:max-w-md md:text-base">
@@ -606,15 +615,15 @@ function PartyInviteSection() {
         motif="branch-1"
         className="absolute -left-6 -top-6 h-48 w-24 bg-rose sm:h-32 sm:w-32 md:h-36 md:w-36 "
       />
-       <FloralImage
+      <FloralImage
         motif="branch-3"
         className="absolute -bottom-6 -right-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-36 md:w-36"
-      /> 
-       <FloralImage
+      />
+      <FloralImage
         motif="branch-1"
         className="absolute -right-4 -top-0 h-32 w-32 -scale-x-100 bg-rose sm:h-44 sm:w-44 md:h-56 md:w-56"
       />
-     
+
       <div className="mx-auto max-w-2xl">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Thông tin tiệc cưới
@@ -718,7 +727,7 @@ function LocationSection() {
 function TimelineSection() {
   return (
     <section className="relative px-6 py-16 sm:px-10 md:px-16 md:py-24">
-       <FloralImage
+      <FloralImage
         motif="branch-1"
         className="absolute -left-8 top-1/2 h-40 w-32 -translate-y-1/2 bg-rose sm:h-56 sm:w-40 md:h-64 md:w-48"
       />
@@ -726,14 +735,14 @@ function TimelineSection() {
         motif="branch-6"
         className="absolute -right-8 top-1/2 h-40 w-32 -translate-y-1/2 rotate-330 bg-rose sm:h-56 sm:w-40 md:h-64 md:w-48"
       />
-        <FloralImage
+      <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter right-[18%] top-8 h-8 w-8 bg-rose sm:h-10 sm:w-10"
       />
       <FloralImage
         motif="butterfly"
         className="absolute animate-butterfly-flutter-flipped bottom-10 left-[15%] h-6 w-6 bg-rose sm:h-8 sm:w-8"
-      /> 
+      />
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Lịch Trình
@@ -803,7 +812,8 @@ function GuestbookSection() {
         </p>
         <SectionDivider />
         <p className="mx-auto mt-6 max-w-sm text-sm leading-relaxed text-ink-soft md:max-w-md md:text-base">
-          Gửi lời chúc phúc đến {COUPLE.groomShort} &amp; {COUPLE.brideShort}
+          Gửi lời chúc phúc đến <span className="whitespace-nowrap">{COUPLE.groomShort} &amp;</span>{' '}
+          <span className="whitespace-nowrap">{COUPLE.brideShort}</span>
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4 text-left">
@@ -1074,7 +1084,7 @@ function GiftModal({ onClose }) {
         onClick={(event) => event.stopPropagation()}
         className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-lg bg-cream sm:max-w-xl"
       >
-        <div className="relative px-6 pb-4 pt-6 text-center" style={{ backgroundColor: ENVELOPE_RED }}>
+        <div className="relative px-6 py-4" style={{ backgroundColor: ENVELOPE_RED }}>
           <button
             type="button"
             onClick={onClose}
@@ -1087,17 +1097,17 @@ function GiftModal({ onClose }) {
             className="font-serif text-2xl font-bold uppercase tracking-wide text-white"
             style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}
           >
-            Gửi lời chúc yêu thương dành tặng cho <br /> Thiên Phúc & Minh Châu
+            <span className="text-xl text-white md:text-2xl">♡</span>
           </h2>
         </div>
 
         <div className="flex flex-col items-center gap-6 p-6 text-center sm:flex-row sm:flex-wrap sm:items-start sm:justify-center">
           {GIFT_QR_CODES.map((qr) => (
-            <div key={qr.id} className="flex max-w-[180px] flex-1 flex-col items-center">
+            <div key={qr.id} className="flex max-w-[220px] flex-1 flex-col items-center">
               <p className="mb-2 min-h-[2rem] text-xs font-medium text-ink">
                 {qr.role} - {qr.name}
               </p>
-              <div className="flex h-32 w-32 items-center justify-center rounded-xl border-2 border-gold-light/40 bg-white p-2 shadow-lg sm:h-40 sm:w-40">
+              <div className="flex h-44 w-44 items-center justify-center rounded-xl border-2 border-gold-light/40 bg-white p-2 shadow-lg sm:h-52 sm:w-52">
                 <img
                   src={qr.src}
                   alt={`QR - ${qr.role} - ${qr.name}`}
@@ -1135,7 +1145,9 @@ function GiftSection() {
         className="absolute -right-6 -top-6 h-24 w-24 bg-rose/60 sm:h-28 sm:w-28"
       />
       <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
-        Gửi lời chúc yêu thương dành tặng {COUPLE.groomShort} &amp; {COUPLE.brideShort}
+        Gửi lời chúc yêu thương dành tặng{' '}
+        <span className="whitespace-nowrap">{COUPLE.groomShort} &amp;</span>{' '}
+        <span className="whitespace-nowrap">{COUPLE.brideShort}</span>
       </p>
       <SectionDivider />
       <div className="mt-10">
@@ -1167,9 +1179,11 @@ function FooterSection() {
       <p className="mt-16 text-sm leading-relaxed text-ink-soft md:text-base">
         Rất hân hạnh được đón tiếp
       </p>
-      <p className="mt-4 font-script text-3xl leading-snug text-name md:text-4xl">
-        {COUPLE.groomShort} &amp; {COUPLE.brideShort}
-      </p>
+      <div className="mt-4 flex flex-col items-center gap-2 font-script text-3xl leading-snug text-name sm:flex-row sm:justify-center sm:gap-4 md:text-4xl">
+        <span className="whitespace-nowrap">{COUPLE.groomShort}</span>
+        <span className="text-xl text-gold md:text-2xl">♡</span>
+        <span className="whitespace-nowrap">{COUPLE.brideShort}</span>
+      </div>
       <p className="mt-2 text-xs uppercase tracking-[0.3em] text-gold md:text-sm">
         {WEDDING_DATE.display}
       </p>
