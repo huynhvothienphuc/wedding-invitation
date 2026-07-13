@@ -758,6 +758,14 @@ function TimelineSection() {
         motif="butterfly"
         className="absolute animate-butterfly-flutter-flipped bottom-10 left-[15%] h-6 w-6 bg-rose sm:h-8 sm:w-8"
       />
+      <FloralImage
+        motif="butterfly"
+        className="absolute animate-butterfly-flutter-flipped bottom-0 left-[8%] h-6 w-6 bg-rose sm:h-8 sm:w-8"
+      />
+      <FloralImage
+        motif="butterfly"
+        className="absolute animate-butterfly-flutter-flipped -bottom-10 left-[19%] h-6 w-6 bg-rose sm:h-8 sm:w-8"
+      />
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold md:text-sm">
           Lịch Trình
