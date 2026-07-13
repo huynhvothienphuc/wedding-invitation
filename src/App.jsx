@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
 
 /* ------------------------------------------------------------------ */
 /* DATA — chỉnh sửa nội dung thiệp tại đây                             */
@@ -134,17 +135,23 @@ const GIFT_QR_CODES = [
 ]
 
 /* ------------------------------------------------------------------ */
-/* SUPABASE PLACEHOLDER — điền config Supabase của bạn ở đây            */
+/* SUPABASE — lưu lời chúc từ Sổ Lưu Bút                                */
+/* Điền VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY trong .env.local     */
+/* (và trong Environment Variables trên Vercel khi deploy).            */
 /* ------------------------------------------------------------------ */
 
-// import { createClient } from '@supabase/supabase-js'
-// const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Chỉ khởi tạo client khi đã có đủ config — tránh crash toàn bộ app lúc
+// tải trang nếu quên điền .env.local (createClient throw ngay nếu thiếu).
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
 
 async function submitGuestbookEntry({ name, message }) {
-  // TODO: thay đoạn giả lập bên dưới bằng lệnh gọi Supabase thật, ví dụ:
-  // const { error } = await supabase.from('guestbook').insert({ name, message })
-  // if (error) throw error
-  await new Promise((resolve) => setTimeout(resolve, 600))
+  if (!supabase) {
+    throw new Error('Chưa cấu hình Supabase (thiếu VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).')
+  }
+  const { error } = await supabase.from('guestbook').insert({ name, message })
+  if (error) throw error
   return { success: true, name, message }
 }
 
@@ -1197,8 +1204,7 @@ function FooterSection() {
 // đây là "user gesture" hợp lệ giúp mở khoá autoplay nhạc trên mọi trình
 // duyệt (kể cả iOS Safari), thay vì trông chờ vào thao tác ngẫu nhiên.
 const ENABLE_OPENING_SCREEN = true
-// Tạm thời ẩn section "Sổ Lưu Bút" — đổi lại thành true để bật lại.
-const ENABLE_GUESTBOOK_SECTION = false
+const ENABLE_GUESTBOOK_SECTION = true
 
 // Cá nhân hoá thiệp theo khách mời qua query param, ví dụ:
 // minhchau-thienphuc.vercel.app/?ten=Nguyen+Van+A
