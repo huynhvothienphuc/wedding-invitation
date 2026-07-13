@@ -204,11 +204,58 @@ function MusicToggleButton({ isPlaying, onToggle }) {
   )
 }
 
+// Màn hình khoá "Mở Thiệp" — che toàn màn hình bằng 1 card ở giữa, chạm nút
+// mới vào được thiệp. Cú chạm này cũng là "user gesture" hợp lệ để mở khoá
+// autoplay nhạc trên mọi trình duyệt (kể cả iOS Safari).
+function OpeningOverlay({ onOpen, isClosing = false }) {
+  return (
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-cream-dark px-6 transition-opacity duration-500 ${isClosing ? 'pointer-events-none opacity-0' : 'opacity-100'
+        }`}
+    >
+      <div className="relative w-full max-w-xs overflow-hidden rounded-2xl bg-cream px-8 py-10 text-center shadow-2xl">
+        <FloralImage
+          motif="branch-2"
+          className="absolute -left-5 top-0 h-16 w-16 bg-rose sm:h-20 sm:w-20"
+        />
+        <FloralImage
+          motif="branch-3"
+          className="absolute bottom-10 -right-5 h-16 w-16 bg-rose sm:h-20 sm:w-20"
+        />
+
+        <h2 className="relative mt-5 flex flex-col items-center gap-1 font-script text-3xl leading-snug text-name">
+          <span>{COUPLE.groomShort}</span>
+          <span className="text-base text-gold">&amp;</span>
+          <span>{COUPLE.brideShort}</span>
+        </h2>
+
+        <div className="relative mt-4">
+          <SectionDivider />
+        </div>
+
+        <p className="relative mt-4 text-sm text-ink-soft">{WEDDING_DATE.display}</p>
+        <p className="relative mt-1 text-xs uppercase tracking-[0.3em] text-ink-soft">
+          Trân trọng kính mời
+        </p>
+
+        <button
+          type="button"
+          onClick={onOpen}
+          onTouchStart={(event) => event.stopPropagation()}
+          className="relative mt-6 rounded-full bg-gold px-8 py-3 text-xs font-medium uppercase tracking-[0.3em] text-cream transition hover:bg-gold-dark md:text-sm"
+        >
+          Mở Thiệp
+        </button>
+      </div>
+    </div>
+  )
+}
+
 /* ------------------------------------------------------------------ */
 /* SECTION 1 — HERO / SAVE THE DATE                                     */
 /* ------------------------------------------------------------------ */
 
-function HeroSection({ showButton = false, onOpen, isClosing = false }) {
+function HeroSection({ guestName = '' }) {
   return (
     <section className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 py-16 text-center sm:px-10 md:px-16">
       <FloralImage
@@ -264,17 +311,8 @@ function HeroSection({ showButton = false, onOpen, isClosing = false }) {
       <p className="mt-6 text-sm uppercase tracking-[0.3em] text-ink-soft md:text-base">
         Trân trọng kính mời
       </p>
-
-      {showButton && (
-        <button
-          type="button"
-          onClick={onOpen}
-          onTouchStart={(event) => event.stopPropagation()}
-          className={`mt-12 rounded-full border border-gold px-8 py-3 text-xs font-medium uppercase tracking-[0.3em] text-gold transition-all duration-500 hover:bg-gold hover:text-cream md:text-sm ${isClosing ? 'pointer-events-none opacity-0' : 'opacity-100'
-            }`}
-        >
-          Mở Thiệp
-        </button>
+      {guestName && (
+        <p className="mt-2 text-lg font-medium text-ink md:text-xl">{guestName}</p>
       )}
     </section>
   )
@@ -1155,10 +1193,19 @@ function FooterSection() {
 /* APP — overlay mở thiệp, nhạc nền, auto-scroll                        */
 /* ------------------------------------------------------------------ */
 
-// Tạm thời ẩn màn hình khoá "Mở Thiệp" — đổi lại thành true để bật lại.
-const ENABLE_OPENING_SCREEN = false
+// Bật màn hình khoá "Mở Thiệp" — bắt buộc chạm nút để vào thiệp, đồng thời
+// đây là "user gesture" hợp lệ giúp mở khoá autoplay nhạc trên mọi trình
+// duyệt (kể cả iOS Safari), thay vì trông chờ vào thao tác ngẫu nhiên.
+const ENABLE_OPENING_SCREEN = true
 // Tạm thời ẩn section "Sổ Lưu Bút" — đổi lại thành true để bật lại.
 const ENABLE_GUESTBOOK_SECTION = false
+
+// Cá nhân hoá thiệp theo khách mời qua query param, ví dụ:
+// minhchau-thienphuc.vercel.app/?ten=Nguyen+Van+A
+function getGuestNameFromUrl() {
+  const raw = new URLSearchParams(window.location.search).get('ten')
+  return raw ? raw.trim() : ''
+}
 
 function App() {
   const audioRef = useRef(null)
@@ -1166,6 +1213,7 @@ function App() {
   const [isOpened, setIsOpened] = useState(!ENABLE_OPENING_SCREEN)
   const [isOverlayClosing, setIsOverlayClosing] = useState(false)
   const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+  const [guestName] = useState(getGuestNameFromUrl)
 
   // Khoá cuộn trang khi overlay "Mở Thiệp" còn hiển thị.
   useEffect(() => {
@@ -1226,7 +1274,11 @@ function App() {
 
   // Tự động phát nhạc ngay khi vào trang. Trình duyệt thường chặn autoplay
   // có âm thanh nếu chưa có tương tác — nếu bị chặn, tự thử lại ngay khi
-  // người dùng chạm/cuộn/click lần đầu tiên ở bất kỳ đâu trên trang.
+  // người dùng chạm/click/gõ phím lần đầu tiên ở bất kỳ đâu trên trang.
+  // (Không dùng scroll/wheel vì auto-scroll tự bắn sự kiện scroll, không
+  // phải thao tác thật của người dùng nên trình duyệt vẫn chặn play().
+  // Dùng touchend chứ không phải touchstart — iOS Safari chỉ coi cú chạm
+  // là "user gesture" hợp lệ để mở khoá audio khi đã nhấc tay ra.)
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return undefined
@@ -1238,7 +1290,7 @@ function App() {
         const retryOnInteraction = () => {
           playMusic()
         }
-        const events = ['click', 'touchstart', 'scroll', 'keydown', 'wheel']
+        const events = ['click', 'touchend', 'keydown']
         events.forEach((event) =>
           window.addEventListener(event, retryOnInteraction, { once: true, passive: true })
         )
@@ -1270,11 +1322,11 @@ function App() {
       <div className="relative mx-auto max-w-3xl overflow-hidden bg-cream text-ink md:shadow-2xl">
         <audio ref={audioRef} src="/audio/my-love.mp3" loop preload="none" />
 
-        <HeroSection
-          showButton={ENABLE_OPENING_SCREEN && !isOpened}
-          isClosing={isOverlayClosing}
-          onOpen={handleOpenInvitation}
-        />
+        {ENABLE_OPENING_SCREEN && !isOpened && (
+          <OpeningOverlay onOpen={handleOpenInvitation} isClosing={isOverlayClosing} />
+        )}
+
+        <HeroSection guestName={guestName} />
         <CeremonySection />
         <GallerySection />
         <PartyInviteSection />
