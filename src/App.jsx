@@ -155,6 +155,16 @@ async function submitGuestbookEntry({ name, message }) {
   return { success: true, name, message }
 }
 
+async function fetchGuestbookEntries() {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from('guestbook')
+    .select('id, name, message, created_at')
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data
+}
+
 /* ------------------------------------------------------------------ */
 /* SMALL REUSABLE UI PIECES                                            */
 /* ------------------------------------------------------------------ */
@@ -788,10 +798,35 @@ function GuestbookSection() {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState('idle') // idle | submitting | success | error
+  const [showThanks, setShowThanks] = useState(false)
+  const [nameError, setNameError] = useState('')
+  const [messageError, setMessageError] = useState('')
+  const [entries, setEntries] = useState([])
+  const [entriesStatus, setEntriesStatus] = useState('loading') // loading | ready | error
+
+  const loadEntries = async () => {
+    try {
+      const data = await fetchGuestbookEntries()
+      setEntries(data)
+      setEntriesStatus('ready')
+    } catch (error) {
+      console.error('Không thể tải lời chúc:', error)
+      setEntriesStatus('error')
+    }
+  }
+
+  useEffect(() => {
+    loadEntries()
+  }, [])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!name.trim() || !message.trim()) return
+
+    const isNameEmpty = !name.trim()
+    const isMessageEmpty = !message.trim()
+    setNameError(isNameEmpty ? 'Vui lòng điền tên của bạn' : '')
+    setMessageError(isMessageEmpty ? 'Vui lòng điền lời chúc' : '')
+    if (isNameEmpty || isMessageEmpty) return
 
     setStatus('submitting')
     try {
@@ -799,6 +834,9 @@ function GuestbookSection() {
       setStatus('success')
       setName('')
       setMessage('')
+      loadEntries()
+      setShowThanks(true)
+      window.setTimeout(() => setShowThanks(false), 3200)
     } catch (error) {
       console.error('Không thể gửi lời chúc:', error)
       setStatus('error')
@@ -808,7 +846,7 @@ function GuestbookSection() {
   return (
     <section className="relative px-6 py-16 sm:px-10 md:px-16 md:py-24">
       <FloralImage
-        motif="branch-3"
+        motif="branch-2"
         className="absolute -bottom-6 -left-6 h-24 w-24 bg-rose sm:h-32 sm:w-32 md:h-40 md:w-40"
       />
       <div className="mx-auto max-w-xl text-center">
@@ -821,7 +859,7 @@ function GuestbookSection() {
           <span className="whitespace-nowrap">{COUPLE.brideShort}</span>
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4 text-left">
+        <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-4 text-left">
           <div>
             <label
               htmlFor="guest-name"
@@ -833,10 +871,14 @@ function GuestbookSection() {
               id="guest-name"
               type="text"
               value={name}
-              onChange={(event) => setName(event.target.value)}
-              required
-              className="mt-2 w-full rounded-md border border-gold-light/50 bg-cream px-4 py-2 text-sm text-ink outline-none focus:border-gold"
+              onChange={(event) => {
+                setName(event.target.value)
+                if (nameError) setNameError('')
+              }}
+              className={`mt-2 w-full rounded-md border bg-cream px-4 py-2 text-sm text-ink outline-none focus:border-gold ${nameError ? 'border-red-400' : 'border-gold-light/50'
+                }`}
             />
+            {nameError && <p className="mt-1 text-xs text-red-600">{nameError}</p>}
           </div>
 
           <div>
@@ -849,11 +891,15 @@ function GuestbookSection() {
             <textarea
               id="guest-message"
               value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              required
+              onChange={(event) => {
+                setMessage(event.target.value)
+                if (messageError) setMessageError('')
+              }}
               rows={4}
-              className="mt-2 w-full rounded-md border border-gold-light/50 bg-cream px-4 py-2 text-sm text-ink outline-none focus:border-gold"
+              className={`mt-2 w-full rounded-md border bg-cream px-4 py-2 text-sm text-ink outline-none focus:border-gold ${messageError ? 'border-red-400' : 'border-gold-light/50'
+                }`}
             />
+            {messageError && <p className="mt-1 text-xs text-red-600">{messageError}</p>}
           </div>
 
           <button
@@ -864,14 +910,73 @@ function GuestbookSection() {
             {status === 'submitting' ? 'Đang gửi...' : 'Gửi lời chúc'}
           </button>
 
-          {status === 'success' && (
-            <p className="text-center text-sm text-gold">Cảm ơn bạn đã gửi lời chúc!</p>
-          )}
           {status === 'error' && (
             <p className="text-center text-sm text-red-600">Có lỗi xảy ra, vui lòng thử lại.</p>
           )}
         </form>
+
+        <div className="mt-10">
+          <p className="text-center text-xs font-medium uppercase tracking-widest text-ink-soft">
+            Lời chúc từ mọi người
+          </p>
+
+          {entriesStatus === 'loading' && (
+            <p className="mt-4 text-center text-sm text-ink-soft">Đang tải...</p>
+          )}
+          {entriesStatus === 'error' && (
+            <p className="mt-4 text-center text-sm text-red-600">
+              Không tải được lời chúc, vui lòng thử lại sau.
+            </p>
+          )}
+          {entriesStatus === 'ready' && entries.length === 0 && (
+            <p className="mt-4 text-center text-sm text-ink-soft">
+              Chưa có lời chúc nào, hãy là người đầu tiên!
+            </p>
+          )}
+          {entriesStatus === 'ready' && entries.length > 0 && (
+            <div className="mt-4 max-h-[22rem] space-y-3 overflow-y-auto pr-2 text-left">
+              {entries.map((entry) => (
+                <div
+                  key={entry.id}
+                  className="rounded-md border border-gold-light/40 bg-cream px-4 py-3"
+                >
+                  <p className="text-sm font-medium text-ink">{entry.name}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-ink-soft">{entry.message}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
+      {showThanks && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 px-6"
+          onClick={() => setShowThanks(false)}
+        >
+          <div
+            className="relative w-full max-w-xs rounded-2xl bg-cream px-8 py-10 text-center shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="animate-pop-in mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold text-3xl text-cream">
+              ♡
+            </div>
+            <p className="mt-5 text-lg font-medium text-ink">Cảm ơn bạn!</p>
+            <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+              Lời chúc của bạn đã được gửi đến{' '}
+              <span className="whitespace-nowrap">{COUPLE.groomShort}</span> &amp;{' '}
+              <span className="whitespace-nowrap">{COUPLE.brideShort}</span>.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowThanks(false)}
+              className="mt-6 rounded-full bg-gold px-8 py-3 text-xs font-medium uppercase tracking-[0.3em] text-cream transition hover:bg-gold-dark"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
